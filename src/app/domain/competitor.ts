@@ -5,7 +5,7 @@ export interface Competitor {
   name: string;
   age: number;
   belt: string;
-  category: string;
+  isDan: boolean;
   forms: number ;
   jump: number;
   combat: number;
