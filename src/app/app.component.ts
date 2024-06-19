@@ -1,15 +1,21 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Competitor } from './domain/competitor';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
-templateUrl: './app.component.html',
+  imports: [RouterOutlet, FormsModule],
+  templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
+  firstPlace = 9;
+  secondPlace = 5;
+  thirdPlace = 2;
+  nonePlace = 0;
+
   items: Competitor[] = [
     {
       id: 15,
@@ -19,6 +25,10 @@ export class AppComponent {
       age: 7,
       belt: 'AMARILLO',
       category: 'COLOR',
+      forms: 0,
+      jump: 0,
+      combat: 0,
+      total: 0,
     },
     {
       id: 16,
@@ -28,6 +38,10 @@ export class AppComponent {
       age: 25,
       belt: 'SEGUNDO DAN',
       category: 'DAN',
+      forms: 0,
+      jump: 0,
+      combat: 0,
+      total: 0,
     },
     {
       id: 17,
@@ -37,6 +51,10 @@ export class AppComponent {
       age: 8,
       belt: 'BLANCO PUNTA AMARILLA',
       category: 'COLOR',
+      forms: 0,
+      jump: 0,
+      combat: 0,
+      total: 0,
     },
     {
       id: 18,
@@ -46,6 +64,10 @@ export class AppComponent {
       age: 12,
       belt: 'VERDE PUNTA AZUL',
       category: 'COLOR',
+      forms: 0,
+      jump: 0,
+      combat: 0,
+      total: 0,
     },
     {
       id: 19,
@@ -55,6 +77,10 @@ export class AppComponent {
       age: 11,
       belt: 'ROJO PUNTA NEGRA',
       category: 'COLOR',
+      forms: 0,
+      jump: 0,
+      combat: 0,
+      total: 0,
     },
     {
       id: 20,
@@ -64,6 +90,10 @@ export class AppComponent {
       age: 11,
       belt: 'VERDE',
       category: 'COLOR',
+      forms: 0,
+      jump: 0,
+      combat: 0,
+      total: 0,
     },
     {
       id: 21,
@@ -73,6 +103,14 @@ export class AppComponent {
       age: 8,
       belt: 'AMARILLO',
       category: 'COLOR',
+      forms: 0,
+      jump: 0,
+      combat: 0,
+      total: 0,
     },
   ];
+
+  calculateTotal(item: Competitor) {
+    item.total = item.forms + item.jump + item.combat;
+  }
 }

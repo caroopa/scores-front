@@ -6,4 +6,8 @@ export interface Competitor {
   age: number;
   belt: string;
   category: string;
+  forms: number ;
+  jump: number;
+  combat: number;
+  total: number;
 }
