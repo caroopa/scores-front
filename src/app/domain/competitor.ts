@@ -1,5 +1,5 @@
 export interface Competitor {
-  id: number;
+  id_competitor: number;
   school: string;
   instructor: string;
   name: string;

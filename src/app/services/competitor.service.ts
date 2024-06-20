@@ -10,6 +10,18 @@ export class CompetitorService {
   constructor(private http: HttpClient) {}
 
   getAll() {
-    return this.http.get<Competitor[]>(apiURL + "competitors", {});
+    return this.http.get<Competitor[]>(apiURL + 'competitors', {});
+  }
+
+  calculateTotal(competitor: Competitor) {
+    const id = competitor.id_competitor;
+    const forms = competitor.forms;
+    const jump = competitor.jump;
+    const combat = competitor.combat;
+    return this.http.put<void>(
+      apiURL +
+        `calculate_total/${id}?forms=${forms}&jump=${jump}&combat=${combat}`,
+      {}
+    );
   }
 }
