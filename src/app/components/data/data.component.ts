@@ -18,7 +18,7 @@ import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-table',
+  selector: 'app-data',
   standalone: true,
   imports: [
     MatTableModule,
@@ -29,8 +29,8 @@ import { FormsModule } from '@angular/forms';
     MatInputModule,
     FormsModule,
   ],
-  templateUrl: './table.component.html',
-  styleUrl: './table.component.scss',
+  templateUrl: './data.component.html',
+  styleUrl: './data.component.scss',
   animations: [
     trigger('detailExpand', [
       state('collapsed, void', style({ height: '0px', minHeight: '0' })),
@@ -42,11 +42,12 @@ import { FormsModule } from '@angular/forms';
     ]),
   ],
 })
-export class TableComponent {
+export class DataComponent {
   firstPlace = 9;
   secondPlace = 5;
   thirdPlace = 2;
   nonePlace = 0;
+  radioOptions = [1, 2, 3, 0];
 
   competitors!: Competitor[];
   showError = '';
@@ -54,7 +55,7 @@ export class TableComponent {
   dataSource!: MatTableDataSource<Competitor>;
 
   displayedColumns: string[] = [
-    'id_competitor',
+    // 'id_competitor',
     'school',
     'instructor',
     'name',
@@ -62,8 +63,8 @@ export class TableComponent {
     // 'belt',
     'isDan',
     'forms',
-    'jump',
     'combat',
+    'jump',
     'total',
   ];
 
@@ -77,7 +78,7 @@ export class TableComponent {
 
     this.competitorService.getAll().subscribe({
       next: (data) => {
-        console.log(data);
+        // console.log(data);
 
         this.competitors = data;
         this.dataSource = new MatTableDataSource<Competitor>(data);

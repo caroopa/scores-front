@@ -16,8 +16,8 @@ export class CompetitorService {
   calculateTotal(competitor: Competitor) {
     const id = competitor.id_competitor;
     const forms = competitor.forms;
-    const jump = competitor.jump;
     const combat = competitor.combat;
+    const jump = competitor.jump;
     return this.http.put<void>(
       apiURL +
         `calculate_total/${id}?forms=${forms}&jump=${jump}&combat=${combat}`,

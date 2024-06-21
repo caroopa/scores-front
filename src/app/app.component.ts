@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MatTabsModule } from '@angular/material/tabs';
-import { TableComponent } from './components/table/table.component';
+import { DataComponent } from './components/data/data.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, TableComponent, MatTabsModule],
+  imports: [RouterOutlet, DataComponent, MatTabsModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
