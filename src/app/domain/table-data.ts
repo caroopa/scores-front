@@ -1,4 +1,4 @@
-export interface Competitor {
+export interface TableData {
   id_competitor: number;
   school: string;
   instructor: string;
@@ -7,7 +7,7 @@ export interface Competitor {
   belt: string;
   isDan: boolean;
   forms: number ;
-  jump: number;
   combat: number;
+  jump: number;
   total: number;
 }

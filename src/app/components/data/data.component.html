@@ -13,8 +13,8 @@
     >
       <p>Escuela</p>
     </th>
-    <td mat-cell *matCellDef="let competitor">
-      <p>{{ competitor.school }}</p>
+    <td mat-cell *matCellDef="let element">
+      <p>{{ element.school }}</p>
     </td>
   </ng-container>
 
@@ -27,8 +27,8 @@
     >
       <p>Instructor</p>
     </th>
-    <td mat-cell *matCellDef="let competitor">
-      <p>{{ competitor.instructor }}</p>
+    <td mat-cell *matCellDef="let element">
+      <p>{{ element.instructor }}</p>
     </td>
   </ng-container>
 
@@ -41,16 +41,16 @@
     >
       <p>Apellido y Nombre</p>
     </th>
-    <td mat-cell *matCellDef="let competitor">
+    <td mat-cell *matCellDef="let element">
       <div class="name-info-box">
         <button
           mat-icon-button
-          (click)="expanded = expanded === competitor ? null : competitor"
+          (click)="expanded = expanded === element ? null : element"
         >
           <i class="fa-solid fa-eye"></i>
         </button>
         <div class="word-companion-info">
-          <p>{{ competitor.name }}</p>
+          <p>{{ element.name }}</p>
         </div>
       </div>
     </td>
@@ -65,8 +65,8 @@
     >
       <p>Categoría</p>
     </th>
-    <td mat-cell *matCellDef="let competitor">
-      <p>@if (competitor.isDan) { DAN } @else { COLOR }</p>
+    <td mat-cell *matCellDef="let element">
+      <p>@if (element.isDan) { DAN } @else { COLOR }</p>
     </td>
   </ng-container>
 
@@ -74,18 +74,12 @@
     <th mat-header-cell *matHeaderCellDef>
       <p>Formas</p>
     </th>
-    <td mat-cell *matCellDef="let competitor">
+    <td mat-cell *matCellDef="let element">
       <div class="mydict">
         <div>
           @for (option of radioOptions; track option) {
-          <label
-            (click)="competitor.forms = option; calculateTotal(competitor)"
-          >
-            <input
-              type="radio"
-              [(ngModel)]="competitor.forms"
-              [value]="option"
-            />
+          <label (click)="element.forms = option; calculateTotal($event, element)">
+            <input type="radio" [(ngModel)]="element.forms" [value]="option" />
             <span>{{ option }}</span>
           </label>
           }
@@ -98,18 +92,12 @@
     <th mat-header-cell *matHeaderCellDef>
       <p>Combate</p>
     </th>
-    <td mat-cell *matCellDef="let competitor">
+    <td mat-cell *matCellDef="let element">
       <div class="mydict">
         <div>
           @for (option of radioOptions; track option) {
-          <label
-            (click)="competitor.combat = option; calculateTotal(competitor)"
-          >
-            <input
-              type="radio"
-              [(ngModel)]="competitor.combat"
-              [value]="option"
-            />
+          <label (click)="element.combat = option; calculateTotal($event, element)">
+            <input type="radio" [(ngModel)]="element.combat" [value]="option" />
             <span>{{ option }}</span>
           </label>
           }
@@ -122,19 +110,15 @@
     <th mat-header-cell *matHeaderCellDef>
       <p>Salto en Alto</p>
     </th>
-    <td mat-cell *matCellDef="let competitor">
+    <td mat-cell *matCellDef="let element">
       <div class="mydict">
         <div>
-          @for (option of radioOptions; track option) {
-          <label (click)="competitor.jump = option; calculateTotal(competitor)">
-            <input
-              type="radio"
-              [(ngModel)]="competitor.jump"
-              [value]="option"
-            />
+          @if (element.isDan) { @for (option of radioOptions; track option) {
+          <label (click)="element.jump = option; calculateTotal($event, element)">
+            <input type="radio" [(ngModel)]="element.jump" [value]="option" />
             <span>{{ option }}</span>
           </label>
-          }
+          } }
         </div>
       </div>
     </td>
@@ -149,8 +133,8 @@
     >
       <p>TOTAL</p>
     </th>
-    <td mat-cell *matCellDef="let competitor">
-      <p>{{ competitor.total }}</p>
+    <td mat-cell *matCellDef="let element">
+      <p>{{ element.total }}</p>
     </td>
   </ng-container>
 
@@ -159,15 +143,15 @@
   <ng-container matColumnDef="expandedDetail">
     <td
       mat-cell
-      *matCellDef="let competitor"
+      *matCellDef="let element"
       [attr.colspan]="displayedColumns.length"
     >
       <div
-        class="competitor-detail"
-        [@detailExpand]="competitor === expanded ? 'expanded' : 'collapsed'"
+        class="element-detail"
+        [@detailExpand]="element === expanded ? 'expanded' : 'collapsed'"
       >
-        <p>Edad: {{ competitor.age }}</p>
-        <p>Cinturón: {{ competitor.belt }}</p>
+        <p>Edad: {{ element.age }}</p>
+        <p>Cinturón: {{ element.belt }}</p>
       </div>
     </td>
   </ng-container>
@@ -176,9 +160,9 @@
 
   <tr
     mat-row
-    *matRowDef="let competitor; columns: displayedColumns"
-    [class.expanded-row]="competitor.isExpanded"
-    (click)="competitor.isExpanded = !competitor.isExpanded"
+    *matRowDef="let element; columns: displayedColumns"
+    [class.expanded-row]="element.isExpanded"
+    (click)="element.isExpanded = !element.isExpanded"
   ></tr>
 
   <tr
