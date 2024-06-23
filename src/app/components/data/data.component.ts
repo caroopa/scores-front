@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { TableData } from '../../domain/table-data';
+import { TableData, Score } from '../../domain/domain';
 import {
   animate,
   state,
@@ -16,7 +16,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
-import { Score } from '../../domain/score';
 
 @Component({
   selector: 'app-data',
@@ -50,12 +49,11 @@ export class DataComponent {
   nonePlace = 0;
   radioOptions = [1, 2, 3, 0];
 
-  competitors!: TableData[];
   showError = '';
   expanded!: TableData | null;
   dataSource!: MatTableDataSource<TableData>;
 
-  displayedColumns: string[] = [
+  displayedColumns = [
     // 'id_competitor',
     'school',
     'instructor',
@@ -81,9 +79,7 @@ export class DataComponent {
       next: (data) => {
         // console.log(data);
 
-        this.competitors = data;
         this.dataSource = new MatTableDataSource<TableData>(data);
-
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
 
@@ -113,10 +109,10 @@ export class DataComponent {
   }
 
   calculateTotal(event: Event, element: TableData) {
-    // prevents service's double call 
+    // prevents service's double call
     event.stopPropagation();
-    event.preventDefault(); 
-    
+    event.preventDefault();
+
     const competitor_id = element.id_competitor;
     const score: Score = {
       forms: element.forms,

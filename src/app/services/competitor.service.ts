@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { TableData } from '../domain/table-data';
-import { Score } from '../domain/score';
+import { TableData, Score } from '../domain/domain';
 import { apiURL } from './config';
 
 @Injectable({

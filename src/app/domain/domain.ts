@@ -11,3 +11,14 @@ export interface TableData {
   jump: number;
   total: number;
 }
+
+export interface Score {
+  forms: number ;
+  combat: number;
+  jump: number;
+}
+
+export interface InstructorScore {
+  name: string;
+  total: number;
+}
