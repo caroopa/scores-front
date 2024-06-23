@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { TableData, Score } from '../../domain/domain';
+import { General, Score } from '../../domain/domain';
 import {
   animate,
   state,
@@ -11,14 +11,15 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
-import { CompetitorService } from '../../services/competitor.service';
+import { GeneralService } from '../../services/general.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
+import { SharedService } from '../../services/shared.service';
 
 @Component({
-  selector: 'app-data',
+  selector: 'app-general',
   standalone: true,
   imports: [
     MatTableModule,
@@ -29,8 +30,8 @@ import { FormsModule } from '@angular/forms';
     MatInputModule,
     FormsModule,
   ],
-  templateUrl: './data.component.html',
-  styleUrl: './data.component.scss',
+  templateUrl: './general.component.html',
+  styleUrl: './general.component.scss',
   animations: [
     trigger('detailExpand', [
       state('collapsed, void', style({ height: '0px', minHeight: '0' })),
@@ -42,7 +43,7 @@ import { FormsModule } from '@angular/forms';
     ]),
   ],
 })
-export class DataComponent {
+export class GeneralComponent {
   firstPlace = 9;
   secondPlace = 5;
   thirdPlace = 2;
@@ -50,16 +51,13 @@ export class DataComponent {
   radioOptions = [1, 2, 3, 0];
 
   showError = '';
-  expanded!: TableData | null;
-  dataSource!: MatTableDataSource<TableData>;
+  expanded!: General | null;
+  dataSource!: MatTableDataSource<General>;
 
   displayedColumns = [
-    // 'id_competitor',
     'school',
     'instructor',
     'name',
-    // 'age',
-    // 'belt',
     'isDan',
     'forms',
     'combat',
@@ -70,16 +68,19 @@ export class DataComponent {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private competitorService: CompetitorService) {}
+  constructor(
+    private generalService: GeneralService,
+    private sharedService: SharedService
+  ) {}
 
   ngOnInit() {
     // TODO: MANEJO DE ERRORES
 
-    this.competitorService.getAll().subscribe({
+    this.generalService.getAll().subscribe({
       next: (data) => {
         // console.log(data);
 
-        this.dataSource = new MatTableDataSource<TableData>(data);
+        this.dataSource = new MatTableDataSource<General>(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
 
@@ -97,7 +98,7 @@ export class DataComponent {
   }
 
   getData() {
-    this.competitorService.getAll().subscribe((data) => {
+    this.generalService.getAll().subscribe((data) => {
       this.dataSource.data = data;
     });
   }
@@ -108,7 +109,7 @@ export class DataComponent {
     this.getData();
   }
 
-  calculateTotal(event: Event, element: TableData) {
+  calculateTotal(event: Event, element: General) {
     // prevents service's double call
     event.stopPropagation();
     event.preventDefault();
@@ -121,9 +122,10 @@ export class DataComponent {
     };
 
     // TODO: HACER ALGO MIENTRAS ESPERA LA RESPUESTA
-    this.competitorService.calculateTotal(competitor_id, score).subscribe({
+    this.generalService.calculateTotal(competitor_id, score).subscribe({
       next: () => {
         this.getData();
+        this.sharedService.reload();
       },
     });
   }

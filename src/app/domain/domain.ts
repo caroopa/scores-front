@@ -1,4 +1,4 @@
-export interface TableData {
+export interface General {
   id_competitor: number;
   school: string;
   instructor: string;
