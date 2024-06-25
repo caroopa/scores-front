@@ -1,3 +1,5 @@
+@import url(../../css/shared.scss);
+
 :focus {
   outline: 0;
   border-color: #2260ff;
@@ -48,8 +50,4 @@ label:first-child span {
 
 label:last-child span {
   border-radius: 0 0.375em 0.375em 0;
-}
-
-.expanded {
-  height: 0;
 }

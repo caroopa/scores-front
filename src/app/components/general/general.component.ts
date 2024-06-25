@@ -1,5 +1,4 @@
 import { Component, ViewChild } from '@angular/core';
-import { General, Score } from '../../domain/domain';
 import {
   animate,
   state,
@@ -17,6 +16,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { SharedService } from '../../services/shared.service';
+import { General, Score } from '../../domain/domain';
 
 @Component({
   selector: 'app-general',
