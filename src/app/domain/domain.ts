@@ -22,3 +22,9 @@ export interface InstructorScore {
   name: string;
   total: number;
 }
+
+export interface CompetitorScore {
+  name: string;
+  belt: string;
+  total: number;
+}

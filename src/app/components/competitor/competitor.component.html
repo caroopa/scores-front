@@ -1,0 +1,50 @@
+<table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows>
+  <ng-container matColumnDef="name" class="header-cont">
+    <th
+      mat-header-cell
+      *matHeaderCellDef
+      mat-sort-header
+      sortActionDescription="Ordenar por Nombre"
+    >
+      <p>Competidor</p>
+    </th>
+    <td mat-cell *matCellDef="let element">
+      <p>{{ element.name }}</p>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="belt" class="header-cont">
+    <th
+      mat-header-cell
+      *matHeaderCellDef
+      mat-sort-header
+      sortActionDescription="Ordenar por Cinturón"
+    >
+      <p>Cinturón</p>
+    </th>
+    <td mat-cell *matCellDef="let element">
+      <p>{{ element.belt }}</p>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="total" class="header-cont">
+    <th
+      mat-header-cell
+      *matHeaderCellDef
+      mat-sort-header
+      sortActionDescription="Ordenar por Total"
+    >
+      <p>TOTAL de puntos</p>
+    </th>
+    <td mat-cell *matCellDef="let element">
+      <p>{{ element.total }}</p>
+    </td>
+  </ng-container>
+
+  <tr class="mat-row" *matNoDataRow>
+    <td class="mat-cell" colspan="displayedColumns.length">{{ showError }}</td>
+  </tr>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>

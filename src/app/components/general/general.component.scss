@@ -49,3 +49,7 @@ label:first-child span {
 label:last-child span {
   border-radius: 0 0.375em 0.375em 0;
 }
+
+.expanded {
+  height: 0;
+}

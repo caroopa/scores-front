@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { MatTabsModule } from '@angular/material/tabs';
 import { GeneralComponent } from './components/general/general.component';
 import { InstructorsComponent } from './components/instructors/instructors.component';
+import { CompetitorComponent } from './components/competitor/competitor.component';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +13,7 @@ import { InstructorsComponent } from './components/instructors/instructors.compo
     GeneralComponent,
     MatTabsModule,
     InstructorsComponent,
+    CompetitorComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',

@@ -4,7 +4,7 @@
 </mat-form-field>
 
 <table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows>
-  <ng-container matColumnDef="school" class="header-cont">
+  <ng-container matColumnDef="school">
     <th
       mat-header-cell
       *matHeaderCellDef
@@ -18,7 +18,7 @@
     </td>
   </ng-container>
 
-  <ng-container matColumnDef="instructor" class="header-cont">
+  <ng-container matColumnDef="instructor">
     <th
       mat-header-cell
       *matHeaderCellDef
@@ -32,7 +32,7 @@
     </td>
   </ng-container>
 
-  <ng-container matColumnDef="name" class="header-cont">
+  <ng-container matColumnDef="name">
     <th
       mat-header-cell
       *matHeaderCellDef
@@ -56,7 +56,7 @@
     </td>
   </ng-container>
 
-  <ng-container matColumnDef="isDan" class="header-cont">
+  <ng-container matColumnDef="isDan">
     <th
       mat-header-cell
       *matHeaderCellDef
@@ -70,7 +70,7 @@
     </td>
   </ng-container>
 
-  <ng-container matColumnDef="forms" class="header-cont">
+  <ng-container matColumnDef="forms">
     <th mat-header-cell *matHeaderCellDef>
       <p>Formas</p>
     </th>
@@ -78,7 +78,9 @@
       <div class="mydict">
         <div>
           @for (option of radioOptions; track option) {
-          <label (click)="element.forms = option; calculateTotal($event, element)">
+          <label
+            (click)="element.forms = option; calculateTotal($event, element)"
+          >
             <input type="radio" [(ngModel)]="element.forms" [value]="option" />
             <span>{{ option }}</span>
           </label>
@@ -88,7 +90,7 @@
     </td>
   </ng-container>
 
-  <ng-container matColumnDef="combat" class="header-cont">
+  <ng-container matColumnDef="combat">
     <th mat-header-cell *matHeaderCellDef>
       <p>Combate</p>
     </th>
@@ -96,7 +98,9 @@
       <div class="mydict">
         <div>
           @for (option of radioOptions; track option) {
-          <label (click)="element.combat = option; calculateTotal($event, element)">
+          <label
+            (click)="element.combat = option; calculateTotal($event, element)"
+          >
             <input type="radio" [(ngModel)]="element.combat" [value]="option" />
             <span>{{ option }}</span>
           </label>
@@ -106,7 +110,7 @@
     </td>
   </ng-container>
 
-  <ng-container matColumnDef="jump" class="header-cont">
+  <ng-container matColumnDef="jump">
     <th mat-header-cell *matHeaderCellDef>
       <p>Salto en Alto</p>
     </th>
@@ -114,7 +118,9 @@
       <div class="mydict">
         <div>
           @if (!element.isDan) { @for (option of radioOptions; track option) {
-          <label (click)="element.jump = option; calculateTotal($event, element)">
+          <label
+            (click)="element.jump = option; calculateTotal($event, element)"
+          >
             <input type="radio" [(ngModel)]="element.jump" [value]="option" />
             <span>{{ option }}</span>
           </label>
@@ -124,7 +130,7 @@
     </td>
   </ng-container>
 
-  <ng-container matColumnDef="total" class="header-cont">
+  <ng-container matColumnDef="total">
     <th
       mat-header-cell
       *matHeaderCellDef
@@ -146,10 +152,7 @@
       *matCellDef="let element"
       [attr.colspan]="displayedColumns.length"
     >
-      <div
-        class="element-detail"
-        [@detailExpand]="element === expanded ? 'expanded' : 'collapsed'"
-      >
+      <div [@detailExpand]="element === expanded ? 'expanded' : 'collapsed'">
         <p>Edad: {{ element.age }}</p>
         <p>Cinturón: {{ element.belt }}</p>
       </div>
@@ -168,7 +171,7 @@
   <tr
     mat-row
     *matRowDef="let row; columns: ['expandedDetail']"
-    class="detail-row"
+    class="expanded"
   ></tr>
 
   <tr class="mat-row" *matNoDataRow>

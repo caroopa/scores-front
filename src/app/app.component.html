@@ -2,8 +2,24 @@
 
 <mat-tab-group>
   <mat-tab label="Ranking">
-    <app-instructors></app-instructors>
+    <div class="ranking-container">
+      <div class="table-container">
+        <h3>Instructores</h3>
+        <app-instructors></app-instructors>
+      </div>
+
+      <div class="table-container">
+        <h3>Danes</h3>
+        <app-competitor [category]="'dan'"></app-competitor>
+      </div>
+
+      <div class="table-container">
+        <h3>Colores</h3>
+        <app-competitor [category]="'color'"></app-competitor>
+      </div>
+    </div>
   </mat-tab>
+
   <mat-tab label="Datos">
     <app-general></app-general>
   </mat-tab>
