@@ -3,8 +3,7 @@
 <mat-button-toggle-group>
   <button mat-flat-button (click)="fileInput.click()" color="primary">
     @if (!isLoading) {
-    <mat-icon>cloud_upload</mat-icon>
-    Cargar } @else {
+    <i class="fa-solid fa-cloud-arrow-up"></i> Cargar } @else {
     <mat-spinner diameter="20"></mat-spinner>
     }
   </button>
@@ -20,12 +19,12 @@
       </div>
 
       <div class="table-container">
-        <h3>Danes</h3>
+        <h3>Top 10 Danes</h3>
         <app-competitor [category]="'dan'"></app-competitor>
       </div>
 
       <div class="table-container">
-        <h3>Colores</h3>
+        <h3>Top 10 Colores</h3>
         <app-competitor [category]="'color'"></app-competitor>
       </div>
     </div>
