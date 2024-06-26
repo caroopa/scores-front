@@ -11,11 +11,12 @@ import { SharedService } from '../../services/shared.service';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { CompetitorScore } from '../../domain/domain';
 import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-competitor',
   standalone: true,
-  imports: [MatTableModule, MatSort, MatSortModule],
+  imports: [MatTableModule, MatSort, MatSortModule, MatPaginatorModule],
   templateUrl: './competitor.component.html',
   styleUrl: './competitor.component.scss',
   animations: [
@@ -31,12 +32,14 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 })
 export class CompetitorComponent {
   @Input() category!: string;
-  @ViewChild(MatSort) sort!: MatSort;
 
   showError = '';
   dataSource!: MatTableDataSource<CompetitorScore>;
   displayedColumns = ['name', 'belt', 'total'];
   expanded!: CompetitorScore | null;
+
+  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(
     private competitorService: CompetitorService,
@@ -44,26 +47,43 @@ export class CompetitorComponent {
   ) {}
 
   ngOnInit() {
-    this.reloadData();
+    // TODO: MANEJO DE ERRORES
+    this.uploadData();
+
     this.sharedService.reload$.subscribe(() => {
       this.reloadData();
     });
+
+    this.sharedService.upload$.subscribe(() => {
+      this.uploadData();
+    });
   }
 
-  reloadData() {
-    // TODO: MANEJO DE ERRORES
-
+  uploadData() {
     this.competitorService.getScores(this.category).subscribe({
       next: (data) => {
         // console.log(data);
 
         this.dataSource = new MatTableDataSource<CompetitorScore>(data);
+        this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
+
+        // this.paginator._intl.itemsPerPageLabel = 'Competidores por página';
+        // this.paginator._intl.nextPageLabel = 'Siguiente';
+        // this.paginator._intl.previousPageLabel = 'Anterior';
+        // this.paginator._intl.firstPageLabel = 'Inicio';
+        // this.paginator._intl.lastPageLabel = 'Fin';
       },
       error: (error) => {
         this.showError = 'No se pudieron cargar los datos.';
         console.log(error);
       },
+    });
+  }
+
+  reloadData() {
+    this.competitorService.getScores(this.category).subscribe((data) => {
+      this.dataSource = new MatTableDataSource<CompetitorScore>(data);
     });
   }
 }

@@ -56,7 +56,7 @@
     </td>
   </ng-container>
 
-  <ng-container matColumnDef="isDan">
+  <ng-container matColumnDef="is_dan">
     <th
       mat-header-cell
       *matHeaderCellDef
@@ -66,7 +66,7 @@
       <p>Categoría</p>
     </th>
     <td mat-cell *matCellDef="let element">
-      <p>@if (element.isDan) { DAN } @else { COLOR }</p>
+      <p>@if (element.is_dan) { DAN } @else { COLOR }</p>
     </td>
   </ng-container>
 
@@ -117,7 +117,7 @@
     <td mat-cell *matCellDef="let element">
       <div class="mydict">
         <div>
-          @if (!element.isDan) { @for (option of radioOptions; track option) {
+          @if (!element.is_dan) { @for (option of radioOptions; track option) {
           <label
             (click)="element.jump = option; calculateTotal($event, element)"
           >

@@ -22,4 +22,10 @@ export class GeneralService {
       {}
     );
   }
+
+  uploadData(fileData: File) {
+    const formData = new FormData();
+    formData.append('file', fileData);
+    return this.http.post<void>(this.apiURLGeneral + 'upload', formData, {});
+  }
 }

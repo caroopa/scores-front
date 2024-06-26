@@ -58,7 +58,7 @@ export class GeneralComponent {
     'school',
     'instructor',
     'name',
-    'isDan',
+    'is_dan',
     'forms',
     'combat',
     'jump',
@@ -75,7 +75,18 @@ export class GeneralComponent {
 
   ngOnInit() {
     // TODO: MANEJO DE ERRORES
+    this.uploadData();
 
+    this.sharedService.reload$.subscribe(() => {
+      this.reloadData();
+    });
+
+    this.sharedService.upload$.subscribe(() => {
+      this.uploadData();
+    });
+  }
+
+  uploadData() {
     this.generalService.getAll().subscribe({
       next: (data) => {
         // console.log(data);
@@ -97,7 +108,7 @@ export class GeneralComponent {
     });
   }
 
-  getData() {
+  reloadData() {
     this.generalService.getAll().subscribe((data) => {
       this.dataSource.data = data;
     });
@@ -106,7 +117,7 @@ export class GeneralComponent {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-    this.getData();
+    this.reloadData();
   }
 
   calculateTotal(event: Event, element: General) {
@@ -124,7 +135,6 @@ export class GeneralComponent {
     // TODO: HACER ALGO MIENTRAS ESPERA LA RESPUESTA
     this.generalService.calculateTotal(competitor_id, score).subscribe({
       next: () => {
-        this.getData();
         this.sharedService.reload();
       },
     });

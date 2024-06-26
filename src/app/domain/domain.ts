@@ -5,7 +5,7 @@ export interface General {
   name: string;
   age: number;
   belt: string;
-  isDan: boolean;
+  is_dan: boolean;
   forms: number ;
   combat: number;
   jump: number;

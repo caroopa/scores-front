@@ -4,6 +4,12 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { GeneralComponent } from './components/general/general.component';
 import { InstructorsComponent } from './components/instructors/instructors.component';
 import { CompetitorComponent } from './components/competitor/competitor.component';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { GeneralService } from './services/general.service';
+import { SharedService } from './services/shared.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-root',
@@ -14,8 +20,43 @@ import { CompetitorComponent } from './components/competitor/competitor.componen
     MatTabsModule,
     InstructorsComponent,
     CompetitorComponent,
+    MatButtonToggleModule,
+    MatIconModule,
+    MatButtonModule,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {}
+export class AppComponent {
+  selectedFile: File | null = null;
+  isLoading = false;
+
+  constructor(
+    private generalService: GeneralService,
+    private sharedService: SharedService
+  ) {}
+
+  onFileSelected(event: Event) {
+    // TODO: VALIDAR FORMATO
+
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      this.isLoading = true;
+
+      this.generalService.uploadData(file).subscribe({
+        next: () => {
+          console.log('Archivo cargado correctamente.');
+        },
+        error: (error) => {
+          console.error('Error en la carga: ', error);
+        },
+        complete: () => {
+          this.sharedService.upload();
+          this.isLoading = false;
+        },
+      });
+    }
+  }
+}
