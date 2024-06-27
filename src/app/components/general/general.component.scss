@@ -1,19 +1,15 @@
-@import url(../../css/shared.scss);
-
 :focus {
   outline: 0;
-  border-color: #2260ff;
+  border-color: var(--primary);
   box-shadow: 0 0 0 4px #b5c9fc;
 }
 
-.mydict div {
+.custom-btn div {
   display: flex;
   flex-wrap: wrap;
-  // margin-top: 0.5rem;
-  // justify-content: center;
 }
 
-.mydict input[type="radio"] {
+.custom-btn input[type="radio"] {
   clip: rect(0 0 0 0);
   clip-path: inset(100%);
   height: 1px;
@@ -23,11 +19,11 @@
   width: 1px;
 }
 
-.mydict input[type="radio"]:checked + span {
-  box-shadow: 0 0 0 0.0625em #0043ed;
-  background-color: #dee7ff;
+.custom-btn input[type="radio"]:checked + span {
+  box-shadow: 0 0 0 0.0625em var(--primary);
+  background-color: var(--background);
   z-index: 1;
-  color: #0043ed;
+  color: var(--primary);
 }
 
 label span {
@@ -50,4 +46,41 @@ label:first-child span {
 
 label:last-child span {
   border-radius: 0 0.375em 0.375em 0;
+}
+
+.search {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.container-input {
+  position: relative;
+}
+
+.input {
+  width: 30rem;
+  padding: 10px 0px 10px 40px;
+  border-radius: 9999px;
+  border: solid 1px var(--primary);
+  transition: all 0.2s ease-in-out;
+  outline: none;
+  opacity: 0.8;
+}
+
+.container-input mat-icon {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translate(0, -50%);
+}
+
+.input:focus {
+  opacity: 1;
+  width: 50rem;
+}
+
+.input::placeholder {
+  font-size: 1rem;
 }

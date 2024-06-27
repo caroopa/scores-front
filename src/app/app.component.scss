@@ -1,3 +1,15 @@
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+}
+
+header h1 {
+  font-size: 2.5rem;
+  font-weight: 500;
+}
+
 .ranking-container {
   width: 100%;
   display: flex;
@@ -9,6 +21,14 @@
   width: 100%;
 }
 
-// .ranking-container > * {
-//   width: 100%;
-// }
+.table-container h3 {
+  text-align: center;
+  font-weight: 500;
+  font-size: 1.6rem;
+  text-transform: uppercase;
+}
+
+::ng-deep .mat-mdc-tab-body-content {
+  padding-top: 1.5rem;
+  height: auto !important;
+}

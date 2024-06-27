@@ -1,7 +1,16 @@
-<mat-form-field>
-  <mat-label>Filtro</mat-label>
-  <input matInput (keyup)="applyFilter($event)" placeholder="Buscar" #input />
-</mat-form-field>
+<div class="search">
+  <div class="container-input">
+    <input
+      type="text"
+      placeholder="Buscar"
+      class="input"
+      (keyup)="applyFilter($event)"
+      placeholder="Buscar"
+      #input
+    />
+    <mat-icon color="primary">search</mat-icon>
+  </div>
+</div>
 
 <table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows>
   <ng-container matColumnDef="school">
@@ -42,14 +51,14 @@
       <p>Apellido y Nombre</p>
     </th>
     <td mat-cell *matCellDef="let element">
-      <div class="name-info-box">
+      <div class="icon-text">
         <button
           mat-icon-button
           (click)="expanded = expanded === element ? null : element"
         >
-          <i class="fa-solid fa-eye"></i>
+          <mat-icon color="primary">remove_red_eye</mat-icon>
         </button>
-        <div class="word-companion-info">
+        <div>
           <p>{{ element.name }}</p>
         </div>
       </div>
@@ -75,7 +84,7 @@
       <p>Formas</p>
     </th>
     <td mat-cell *matCellDef="let element">
-      <div class="mydict">
+      <div class="custom-btn">
         <div>
           @for (option of radioOptions; track option) {
           <label
@@ -95,7 +104,7 @@
       <p>Combate</p>
     </th>
     <td mat-cell *matCellDef="let element">
-      <div class="mydict">
+      <div class="custom-btn">
         <div>
           @for (option of radioOptions; track option) {
           <label
@@ -115,7 +124,7 @@
       <p>Salto en Alto</p>
     </th>
     <td mat-cell *matCellDef="let element">
-      <div class="mydict">
+      <div class="custom-btn">
         <div>
           @if (!element.is_dan) { @for (option of radioOptions; track option) {
           <label
@@ -137,10 +146,10 @@
       mat-sort-header
       sortActionDescription="Ordenar por Total"
     >
-      <p>TOTAL</p>
+      <p>TOTAL de puntos</p>
     </th>
     <td mat-cell *matCellDef="let element">
-      <p>{{ element.total }}</p>
+      <p class="total">{{ element.total }}</p>
     </td>
   </ng-container>
 
@@ -153,8 +162,20 @@
       [attr.colspan]="displayedColumns.length"
     >
       <div [@detailExpand]="element === expanded ? 'expanded' : 'collapsed'">
-        <p>Edad: {{ element.age }}</p>
-        <p>Cinturón: {{ element.belt }}</p>
+        <mat-chip-set>
+          <mat-chip class="custom-chip"
+            ><div class="chip-text">
+              <span>Edad:</span>
+              <p>{{ element.age }}</p>
+            </div></mat-chip
+          >
+          <mat-chip class="custom-chip"
+            ><div class="chip-text">
+              <span>Cinturón:</span>
+              <p>{{ element.belt }}</p>
+            </div></mat-chip
+          >
+        </mat-chip-set>
       </div>
     </td>
   </ng-container>
@@ -183,6 +204,5 @@
   [pageSize]="10"
   [pageSizeOptions]="[5, 10, 20, 50]"
   showFirstLastButtons
-  aria-label="Seleccione la cantidad"
 >
 </mat-paginator>

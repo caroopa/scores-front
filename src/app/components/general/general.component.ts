@@ -1,4 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Injectable, ViewChild } from '@angular/core';
+import { MaterialModule } from '../../material.module';
 import {
   animate,
   state,
@@ -6,29 +7,44 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatSort, MatSortModule } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
+import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { GeneralService } from '../../services/general.service';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
-import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { SharedService } from '../../services/shared.service';
 import { General, Score } from '../../domain/domain';
+import { Subject } from 'rxjs';
 
+@Injectable()
+export class SpanishPaginatorIntl extends MatPaginatorIntl {
+  override changes = new Subject<void>();
+
+  override itemsPerPageLabel = 'Competidores por página:';
+  override nextPageLabel = 'Siguiente';
+  override previousPageLabel = 'Anterior';
+
+  override getRangeLabel = (
+    page: number,
+    pageSize: number,
+    length: number
+  ): string => {
+    if (length === 0) {
+      return `Página 1 de 1`;
+    }
+    const amountPages = Math.ceil(length / pageSize);
+    return `${page + 1} - ${amountPages} de ${length}`;
+  };
+}
 @Component({
   selector: 'app-general',
   standalone: true,
-  imports: [
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatInputModule,
-    FormsModule,
+  imports: [MaterialModule, FormsModule],
+  providers: [
+    {
+      provide: MatPaginatorIntl,
+      useClass: SpanishPaginatorIntl,
+    },
   ],
   templateUrl: './general.component.html',
   styleUrl: './general.component.scss',
@@ -65,15 +81,15 @@ export class GeneralComponent {
     'total',
   ];
 
-  @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private generalService: GeneralService,
     private sharedService: SharedService
   ) {}
 
-  ngOnInit() {
+  ngAfterViewInit() {
     // TODO: MANEJO DE ERRORES
     this.uploadData();
 
@@ -90,16 +106,9 @@ export class GeneralComponent {
     this.generalService.getAll().subscribe({
       next: (data) => {
         // console.log(data);
-
         this.dataSource = new MatTableDataSource<General>(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-
-        this.paginator._intl.itemsPerPageLabel = 'Competidores por página';
-        this.paginator._intl.nextPageLabel = 'Siguiente';
-        this.paginator._intl.previousPageLabel = 'Anterior';
-        this.paginator._intl.firstPageLabel = 'Inicio';
-        this.paginator._intl.lastPageLabel = 'Fin';
       },
       error: (error) => {
         this.showError = 'No se pudieron cargar los datos.';

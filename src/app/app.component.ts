@@ -1,29 +1,21 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { MatTabsModule } from '@angular/material/tabs';
+import { MaterialModule } from './material.module';
 import { GeneralComponent } from './components/general/general.component';
 import { InstructorsComponent } from './components/instructors/instructors.component';
 import { CompetitorComponent } from './components/competitor/competitor.component';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
 import { GeneralService } from './services/general.service';
 import { SharedService } from './services/shared.service';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
     RouterOutlet,
+    MaterialModule,
     GeneralComponent,
-    MatTabsModule,
     InstructorsComponent,
     CompetitorComponent,
-    MatButtonToggleModule,
-    MatIconModule,
-    MatButtonModule,
-    MatProgressSpinnerModule,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
@@ -55,6 +47,8 @@ export class AppComponent {
         complete: () => {
           this.sharedService.upload();
           this.isLoading = false;
+          input.value = '';
+          // TODO: CARTEL DE ÉXITO
         },
       });
     }

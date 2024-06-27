@@ -1,22 +1,21 @@
-<table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows>
+<table mat-table [dataSource]="dataSource" multiTemplateDataRows>
   <ng-container matColumnDef="name" class="header-cont">
     <th
       mat-header-cell
       *matHeaderCellDef
-      mat-sort-header
       sortActionDescription="Ordenar por Nombre"
     >
       <p>Competidor</p>
     </th>
     <td mat-cell *matCellDef="let element">
-      <div class="name-info-box">
+      <div class="icon-text">
         <button
           mat-icon-button
           (click)="expanded = expanded === element ? null : element"
         >
-          <i class="fa-solid fa-eye"></i>
+          <mat-icon color="primary">remove_red_eye</mat-icon>
         </button>
-        <div class="word-companion-info">
+        <div>
           <p>{{ element.name }}</p>
         </div>
       </div>
@@ -27,7 +26,6 @@
     <th
       mat-header-cell
       *matHeaderCellDef
-      mat-sort-header
       sortActionDescription="Ordenar por Cinturón"
     >
       <p>Cinturón</p>
@@ -41,13 +39,12 @@
     <th
       mat-header-cell
       *matHeaderCellDef
-      mat-sort-header
       sortActionDescription="Ordenar por Total"
     >
       <p>TOTAL de puntos</p>
     </th>
     <td mat-cell *matCellDef="let element">
-      <p>{{ element.total }}</p>
+      <p class="total">{{ element.total }}</p>
     </td>
   </ng-container>
 
@@ -60,7 +57,14 @@
       [attr.colspan]="displayedColumns.length"
     >
       <div [@detailExpand]="element === expanded ? 'expanded' : 'collapsed'">
-        <p>Escuela: {{ element.school }}</p>
+        <mat-chip-set>
+          <mat-chip class="custom-chip"
+            ><div class="chip-text">
+              <span>Escuela:</span>
+              <p>{{ element.school }}</p>
+            </div></mat-chip
+          >
+        </mat-chip-set>
       </div>
     </td>
   </ng-container>
@@ -84,11 +88,3 @@
     <td class="mat-cell" colspan="displayedColumns.length">{{ showError }}</td>
   </tr>
 </table>
-
-<!-- <mat-paginator
-  [pageSize]="10"
-  [pageSizeOptions]="[5, 10, 20, 50]"
-  showFirstLastButtons
-  aria-label="Seleccione la cantidad"
->
-</mat-paginator> -->

@@ -1,15 +1,43 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Injectable, ViewChild } from '@angular/core';
+import { MaterialModule } from '../../material.module';
 import { InstructorScore } from '../../domain/domain';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
 import { InstructorService } from '../../services/instructor.service';
 import { SharedService } from '../../services/shared.service';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
+import { Subject } from 'rxjs';
 
+@Injectable()
+export class SpanishPaginatorIntl extends MatPaginatorIntl {
+  override changes = new Subject<void>();
+
+  override itemsPerPageLabel = 'Instructores:';
+  override nextPageLabel = 'Siguiente';
+  override previousPageLabel = 'Anterior';
+
+  override getRangeLabel = (
+    page: number,
+    pageSize: number,
+    length: number
+  ): string => {
+    if (length === 0) {
+      return `Página 1 de 1`;
+    }
+    const amountPages = Math.ceil(length / pageSize);
+    return `${page + 1} - ${amountPages} de ${length}`;
+  };
+}
 @Component({
   selector: 'app-instructors',
   standalone: true,
-  imports: [MatTableModule, MatSort, MatSortModule, MatPaginatorModule],
+  imports: [MaterialModule],
+  providers: [
+    {
+      provide: MatPaginatorIntl,
+      useClass: SpanishPaginatorIntl,
+    },
+  ],
   templateUrl: './instructors.component.html',
   styleUrl: './instructors.component.scss',
 })
@@ -18,15 +46,15 @@ export class InstructorsComponent {
   dataSource!: MatTableDataSource<InstructorScore>;
   displayedColumns = ['name', 'total'];
 
-  @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private instructorService: InstructorService,
     private sharedService: SharedService
   ) {}
 
-  ngOnInit() {
+  ngAfterViewInit() {
     // TODO: MANEJO DE ERRORES
     this.uploadData();
 
@@ -42,17 +70,9 @@ export class InstructorsComponent {
   uploadData() {
     this.instructorService.getScores().subscribe({
       next: (data) => {
-        // console.log(data);
-        
         this.dataSource = new MatTableDataSource<InstructorScore>(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-
-        this.paginator._intl.itemsPerPageLabel = 'Competidores por página';
-        this.paginator._intl.nextPageLabel = 'Siguiente';
-        this.paginator._intl.previousPageLabel = 'Anterior';
-        this.paginator._intl.firstPageLabel = 'Inicio';
-        this.paginator._intl.lastPageLabel = 'Fin';
       },
       error: (error) => {
         this.showError = 'No se pudieron cargar los datos.';

@@ -1,4 +1,82 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --primary: #005cbb;
+  --background: #dee7ff;
+}
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html {
+  font-size: 16px;
+}
+
+* {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-size: 1rem;
+}
+
+p,
+h1 {
+  margin-bottom: 0 !important;
+}
+
+.expanded {
+  height: 0 !important;
+}
+
+.icon-text {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.icon-text p {
+  text-align: start;
+}
+
+.custom-chip,
+.mat-mdc-header-row {
+  background-color: var(--background) !important;
+}
+
+.chip-text {
+  display: flex;
+  gap: 0.2rem;
+}
+
+.chip-text span {
+  font-weight: 800;
+}
+
+.mat-sort-header-container {
+  justify-content: center;
+}
+
+.mat-mdc-cell,
+.total,
+.mat-mdc-table .mat-mdc-header-cell {
+  text-align: center !important;
+}
+
+.mat-sort-header-arrow.ng-trigger.ng-trigger-arrowPosition {
+  opacity: 0;
+}
+
+.mat-sort-header-pointer-left.ng-trigger.ng-trigger-leftPointer {
+  transform: rotate(-45deg);
+}
+.mat-sort-header-pointer-right.ng-trigger.ng-trigger-rightPointer {
+  transform: rotate(45deg);
+}
+
+.mat-mdc-tab-group.mat-mdc-tab-group-stretch-tabs
+  > .mat-mdc-tab-header
+  .mat-mdc-tab[aria-selected="true"] {
+  background-color: var(--background) !important;
+}
+
+.mat-mdc-paginator-container {
+  justify-content: center !important;
+}
+
+.mat-mdc-tab-body.mat-mdc-tab-body-active {
+  overflow: inherit !important;
+}

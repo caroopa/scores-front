@@ -1,14 +1,23 @@
-<h1>Copa Koguryo</h1>
-
-<mat-button-toggle-group>
-  <button mat-flat-button (click)="fileInput.click()" color="primary">
-    @if (!isLoading) {
-    <i class="fa-solid fa-cloud-arrow-up"></i> Cargar } @else {
-    <mat-spinner diameter="20"></mat-spinner>
-    }
-  </button>
-  <input #fileInput type="file" hidden (change)="onFileSelected($event)" />
-</mat-button-toggle-group>
+<header>
+  <h1>Copa Koguryo</h1>
+  <mat-button-toggle-group>
+    <button mat-flat-button (click)="fileInput.click()" color="primary">
+      @if (!isLoading) {
+      <ng-container>
+        <div class="icon-text">
+          <mat-icon>cloud_upload</mat-icon>
+          <p>Cargar</p>
+        </div>
+      </ng-container>
+      } @else {
+      <ng-container>
+        <mat-spinner diameter="20"></mat-spinner>
+      </ng-container>
+      }
+    </button>
+    <input #fileInput type="file" hidden (change)="onFileSelected($event)" />
+  </mat-button-toggle-group>
+</header>
 
 <mat-tab-group>
   <mat-tab label="Ranking">
