@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MaterialModule } from '../../material.module';
 import {
   animate,
@@ -12,7 +12,6 @@ import { SharedService } from '../../services/shared.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { CompetitorScore } from '../../domain/domain';
 import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-competitor',
