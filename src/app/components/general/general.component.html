@@ -149,7 +149,13 @@
       <p>TOTAL de puntos</p>
     </th>
     <td mat-cell *matCellDef="let element">
-      <p class="total">{{ element.total }}</p>
+      <div class="loading">
+        @if (calculatingTotal && idCalculating == element.id_competitor) {
+        <mat-spinner diameter="20"></mat-spinner>
+        } @else {
+        <p>{{ element.total }}</p>
+        }
+      </div>
     </td>
   </ng-container>
 

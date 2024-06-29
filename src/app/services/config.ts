@@ -1,1 +1,2 @@
-export const apiURL = 'https://scores-back.onrender.com/'; // change URL for deploy
+export const apiURL = 'https://scores-back.onrender.com/';
+export const apiURLws = 'http://scores-back.onrender.com/';

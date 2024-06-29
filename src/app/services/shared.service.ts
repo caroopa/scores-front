@@ -8,6 +8,8 @@ export class SharedService {
   private reloadSubject = new Subject<void>();
   private uploadSubject = new Subject<void>();
 
+  constructor() {}
+
   get reload$() {
     return this.reloadSubject.asObservable();
   }

@@ -84,3 +84,8 @@ label:last-child span {
 .input::placeholder {
   font-size: 1rem;
 }
+
+.loading {
+  display: flex;
+  justify-content: center;
+}
