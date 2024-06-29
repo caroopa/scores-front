@@ -16,7 +16,7 @@ export class GeneralService {
   }
 
   private connectWebSocket() {
-    this.webSocket = new WebSocket('ws://' + apiURLws + '/ws');
+    this.webSocket = new WebSocket('wss://' + apiURLws + '/ws');
 
     this.webSocket.onopen = () => {
       // console.log('Conectado al servidor WebSocket');
