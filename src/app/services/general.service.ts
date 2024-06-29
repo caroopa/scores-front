@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { General, Score } from '../domain/domain';
-import { apiURL } from './config';
+import { apiURL, apiURLws } from './config';
 import { SharedService } from './shared.service';
 
 @Injectable({
@@ -16,7 +16,7 @@ export class GeneralService {
   }
 
   private connectWebSocket() {
-    this.webSocket = new WebSocket('ws://127.0.0.1:8000/ws');
+    this.webSocket = new WebSocket('ws://' + apiURLws + '/ws');
 
     this.webSocket.onopen = () => {
       // console.log('Conectado al servidor WebSocket');
