@@ -65,6 +65,8 @@ export class GeneralComponent {
   thirdPlace = 2;
   nonePlace = 0;
   radioOptions = [1, 2, 3, 0];
+  calculatingTotal = false;
+  idCalculating!: number | null;
 
   showError = '';
   expanded!: General | null;
@@ -120,6 +122,8 @@ export class GeneralComponent {
   reloadData() {
     this.generalService.getAll().subscribe((data) => {
       this.dataSource.data = data;
+      this.calculatingTotal = false;
+      this.idCalculating = null;
     });
   }
 
@@ -134,18 +138,22 @@ export class GeneralComponent {
     event.stopPropagation();
     event.preventDefault();
 
-    const competitor_id = element.id_competitor;
-    const score: Score = {
-      forms: element.forms,
-      combat: element.combat,
-      jump: element.jump,
-    };
+    if (!this.calculatingTotal) {
+      const competitor_id = element.id_competitor;
+      const score: Score = {
+        forms: element.forms,
+        combat: element.combat,
+        jump: element.jump,
+      };
 
-    // TODO: HACER ALGO MIENTRAS ESPERA LA RESPUESTA
-    this.generalService.calculateTotal(competitor_id, score).subscribe({
-      next: () => {
-        // this.sharedService.reload();
-      },
-    });
+      this.calculatingTotal = true;
+      this.idCalculating = competitor_id;
+
+      this.generalService.calculateTotal(competitor_id, score).subscribe({
+        error: (error) => {
+          console.error('Error calculating total:', error);
+        },
+      });
+    }
   }
 }
