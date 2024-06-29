@@ -89,7 +89,7 @@ export class GeneralComponent {
     private sharedService: SharedService
   ) {}
 
-  ngAfterViewInit() {
+  ngOnInit() {
     // TODO: MANEJO DE ERRORES
     this.uploadData();
 
@@ -144,7 +144,7 @@ export class GeneralComponent {
     // TODO: HACER ALGO MIENTRAS ESPERA LA RESPUESTA
     this.generalService.calculateTotal(competitor_id, score).subscribe({
       next: () => {
-        this.sharedService.reload();
+        // this.sharedService.reload();
       },
     });
   }

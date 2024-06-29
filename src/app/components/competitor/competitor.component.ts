@@ -46,7 +46,7 @@ export class CompetitorComponent {
     private sharedService: SharedService
   ) {}
 
-  ngAfterViewInit() {
+  ngOnInit() {
     // TODO: MANEJO DE ERRORES
     this.uploadData();
 
