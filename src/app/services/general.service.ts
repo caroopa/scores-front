@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { General, Score } from '../domain/domain';
 import { apiURL } from './config';
+import { SharedService } from './shared.service';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +10,7 @@ import { apiURL } from './config';
 export class GeneralService {
   apiURLGeneral = apiURL + 'general/';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private sharedService: SharedService) {}
 
   getAll() {
     return this.http.get<General[]>(this.apiURLGeneral, {});

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { Socket } from 'ngx-socket-io';
 
 @Injectable({
   providedIn: 'root',
@@ -7,6 +8,12 @@ import { Subject } from 'rxjs';
 export class SharedService {
   private reloadSubject = new Subject<void>();
   private uploadSubject = new Subject<void>();
+
+  constructor(private socket: Socket) {
+    this.socket.on('reload', () => {
+      this.reload();
+    });
+  }
 
   get reload$() {
     return this.reloadSubject.asObservable();
