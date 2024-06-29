@@ -1,1 +1,1 @@
-export const apiURL = 'https://scores-back.onrender.com/';
+export const apiURL = 'http://127.0.0.1:8000/'; // change URL for deploy
