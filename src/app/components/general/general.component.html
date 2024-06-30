@@ -91,7 +91,9 @@
             (click)="element.forms = option; calculateTotal($event, element)"
           >
             <input type="radio" [(ngModel)]="element.forms" [value]="option" />
-            <span>{{ option }}</span>
+            <span [ngClass]="!calculatingTotal ? 'span' : 'disabled-span'">{{
+              option
+            }}</span>
           </label>
           }
         </div>
@@ -111,7 +113,9 @@
             (click)="element.combat = option; calculateTotal($event, element)"
           >
             <input type="radio" [(ngModel)]="element.combat" [value]="option" />
-            <span>{{ option }}</span>
+            <span [ngClass]="!calculatingTotal ? 'span' : 'disabled-span'">{{
+              option
+            }}</span>
           </label>
           }
         </div>
@@ -131,7 +135,9 @@
             (click)="element.jump = option; calculateTotal($event, element)"
           >
             <input type="radio" [(ngModel)]="element.jump" [value]="option" />
-            <span>{{ option }}</span>
+            <span [ngClass]="!calculatingTotal ? 'span' : 'disabled-span'">{{
+              option
+            }}</span>
           </label>
           } }
         </div>

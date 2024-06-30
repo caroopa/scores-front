@@ -1,4 +1,5 @@
 import { Component, Injectable, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../../material.module';
 import {
   animate,
@@ -39,7 +40,7 @@ export class SpanishPaginatorIntl extends MatPaginatorIntl {
 @Component({
   selector: 'app-general',
   standalone: true,
-  imports: [MaterialModule, FormsModule],
+  imports: [MaterialModule, FormsModule, CommonModule],
   providers: [
     {
       provide: MatPaginatorIntl,

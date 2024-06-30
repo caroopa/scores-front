@@ -6,7 +6,7 @@
 
 .custom-btn div {
   display: flex;
-  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .custom-btn input[type="radio"] {
@@ -17,27 +17,6 @@
   position: absolute;
   white-space: nowrap;
   width: 1px;
-}
-
-.custom-btn input[type="radio"]:checked + span {
-  box-shadow: 0 0 0 0.0625em var(--primary);
-  background-color: var(--background);
-  z-index: 1;
-  color: var(--primary);
-}
-
-label span {
-  display: block;
-  cursor: pointer;
-  background-color: #fff;
-  padding: 0.375em 0.75em;
-  position: relative;
-  margin-left: 0.0625em;
-  box-shadow: 0 0 0 0.0625em #b5bfd9;
-  letter-spacing: 0.05em;
-  color: #3e4963;
-  text-align: center;
-  transition: background-color 0.5s ease;
 }
 
 label:first-child span {
@@ -88,4 +67,52 @@ label:last-child span {
 .loading {
   display: flex;
   justify-content: center;
+}
+
+.mat-column-forms,
+.mat-column-combat,
+.mat-column-forms {
+  width: 11.6rem;
+}
+
+.span,
+.disabled-span {
+  display: block;
+  padding: 0.5rem 0.55rem;
+  position: relative;
+  text-align: center;
+}
+
+.span {
+  cursor: pointer;
+  background-color: #fff;
+  box-shadow: 0 0 0 0.0625em #b5bfd9;
+  color: #3e4963;
+  transition: background-color 0.5s ease;
+}
+
+.disabled-span {
+  cursor: auto;
+  pointer-events: none;
+  background-color: #f2f2f2;
+  box-shadow: 0 0 0 0.0625em #b5bfd9;
+  color: #3e4963;
+  transition: background-color 0.5s ease;
+}
+
+.custom-btn input[type="radio"]:checked + .span,
+.custom-btn input[type="radio"]:checked + .disabled-span {
+  z-index: 1;
+}
+
+.custom-btn input[type="radio"]:checked + .span {
+  box-shadow: 0 0 0 0.0625em var(--primary);
+  background-color: var(--background);
+  color: var(--primary);
+}
+
+.custom-btn input[type="radio"]:checked + .disabled-span {
+  box-shadow: 0 0 0 0.0625em var(--primary);
+  background-color: #dadada;
+  color: black;
 }
