@@ -1,2 +1,2 @@
-export const apiURL = 'https://scores-back.onrender.com/';
-export const apiURLws = 'scores-back.onrender.com';
+export const apiURL = 'http://127.0.0.1:8000/';
+export const apiURLws = '127.0.0.1:8000';
