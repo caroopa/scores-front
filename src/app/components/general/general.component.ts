@@ -1,4 +1,10 @@
-import { Component, Injectable, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Injectable,
+  Renderer2,
+  ViewChild,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../../material.module';
 import {
@@ -86,10 +92,12 @@ export class GeneralComponent {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild('input', { static: true }) searchInput!: ElementRef;
 
   constructor(
     private generalService: GeneralService,
-    private sharedService: SharedService
+    private sharedService: SharedService,
+    private renderer: Renderer2
   ) {}
 
   ngOnInit() {
@@ -156,5 +164,20 @@ export class GeneralComponent {
         },
       });
     }
+  }
+
+  onInputBlur(event: FocusEvent) {
+    const target = event.relatedTarget as HTMLElement;
+    if (target && target.tagName === 'INPUT') {
+      target.focus();
+    }
+  }
+
+  ngAfterViewInit() {
+    this.renderer.listen(
+      this.searchInput.nativeElement,
+      'blur',
+      this.onInputBlur.bind(this)
+    );
   }
 }
