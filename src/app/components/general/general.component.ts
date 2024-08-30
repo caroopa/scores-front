@@ -137,12 +137,9 @@ export class GeneralComponent {
   }
 
   reloadData() {
-    this.waiting();
     this.generalService.getAll().subscribe({
       next: (data) => {
-        this.loading = false;
         this.dataSource.data = data;
-
         this.calculatingTotal = false;
         this.idCalculating = null;
       },
@@ -194,10 +191,12 @@ export class GeneralComponent {
   }
 
   ngAfterViewInit() {
-    this.renderer.listen(
-      this.searchInput.nativeElement,
-      'blur',
-      this.onInputBlur.bind(this)
-    );
+    if (this.searchInput) {
+      this.renderer.listen(
+        this.searchInput.nativeElement,
+        'blur',
+        this.onInputBlur.bind(this)
+      );
+    }
   }
 }
