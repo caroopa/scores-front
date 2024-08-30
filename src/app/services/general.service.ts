@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { General, Score } from '../domain/domain';
+import { General, Score } from '../schemas/domain';
 import { apiURL, apiURLws } from './config';
 import { SharedService } from './shared.service';
 

@@ -10,7 +10,7 @@ import {
 import { CompetitorService } from '../../services/competitor.service';
 import { SharedService } from '../../services/shared.service';
 import { MatTableDataSource } from '@angular/material/table';
-import { CompetitorScore } from '../../domain/domain';
+import { CompetitorScore } from '../../schemas/domain';
 import { MatSort } from '@angular/material/sort';
 
 @Component({

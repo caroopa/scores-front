@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { apiURL } from './config';
 import { HttpClient } from '@angular/common/http';
-import { CompetitorScore } from '../domain/domain';
+import { CompetitorScore } from '../schemas/domain';
 
 @Injectable({
   providedIn: 'root',

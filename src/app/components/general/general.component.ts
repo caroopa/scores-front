@@ -20,7 +20,7 @@ import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { GeneralService } from '../../services/general.service';
 import { FormsModule } from '@angular/forms';
 import { SharedService } from '../../services/shared.service';
-import { General, Score } from '../../domain/domain';
+import { General, Score } from '../../schemas/domain';
 import { Subject } from 'rxjs';
 
 @Injectable()

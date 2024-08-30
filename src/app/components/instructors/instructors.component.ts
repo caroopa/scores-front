@@ -1,6 +1,6 @@
 import { Component, Injectable, ViewChild } from '@angular/core';
 import { MaterialModule } from '../../material.module';
-import { InstructorScore } from '../../domain/domain';
+import { InstructorScore } from '../../schemas/domain';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { InstructorService } from '../../services/instructor.service';
@@ -42,7 +42,8 @@ export class SpanishPaginatorIntl extends MatPaginatorIntl {
   styleUrl: './instructors.component.scss',
 })
 export class InstructorsComponent {
-  showError = '';
+  loading = false;
+  connectionError = false;
   dataSource!: MatTableDataSource<InstructorScore>;
   displayedColumns = ['name', 'total'];
 
@@ -55,7 +56,6 @@ export class InstructorsComponent {
   ) {}
 
   ngOnInit() {
-    // TODO: MANEJO DE ERRORES
     this.uploadData();
 
     this.sharedService.reload$.subscribe(() => {
@@ -68,22 +68,42 @@ export class InstructorsComponent {
   }
 
   uploadData() {
+    this.loading = true;
+    this.connectionError = false;
+
     this.instructorService.getScores().subscribe({
       next: (data) => {
+        this.loading = false;
         this.dataSource = new MatTableDataSource<InstructorScore>(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       },
       error: (error) => {
-        this.showError = 'No se pudieron cargar los datos.';
-        console.log(error);
+        this.loading = false;
+        if (error.status === 0) {
+          this.connectionError = true;
+        }
       },
     });
   }
 
   reloadData() {
-    this.instructorService.getScores().subscribe((data) => {
-      this.dataSource.data = data;
+    this.loading = true;
+    this.connectionError = false;
+    console.log("hola");
+    
+
+    this.instructorService.getScores().subscribe({
+      next: (data) => {
+        this.dataSource.data = data;
+        this.loading = false;
+      },
+      error: (error) => {
+        this.loading = false;
+        if (error.status === 0) {
+          this.connectionError = true;
+        }
+      },
     });
   }
 }
