@@ -1,0 +1,7 @@
+@if (!connectionError) { @if (loading) {
+<div class="spinner-container">
+  <mat-spinner diameter="70"></mat-spinner>
+</div>
+} @else {
+<ng-content></ng-content>
+} }

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { MaterialModule } from '../../material.module';
 import {
   animate,
@@ -12,6 +12,7 @@ import { SharedService } from '../../services/shared.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { CompetitorScore } from '../../schemas/domain';
 import { MatSort } from '@angular/material/sort';
+import { Base } from '../../schemas/base';
 
 @Component({
   selector: 'app-competitor',
@@ -30,50 +31,24 @@ import { MatSort } from '@angular/material/sort';
     ]),
   ],
 })
-export class CompetitorComponent {
+export class CompetitorComponent extends Base<CompetitorScore> {
   @Input() category!: string;
-  loading = false;
-  connectionError = false;
-  dataSource!: MatTableDataSource<CompetitorScore>;
   displayedColumns = ['name', 'belt', 'total'];
-  expanded!: CompetitorScore | null;
 
   constructor(
     private competitorService: CompetitorService,
-    private sharedService: SharedService
-  ) {}
-
-  ngOnInit() {
-    this.uploadData();
-
-    this.sharedService.reload$.subscribe(() => {
-      this.reloadData();
-    });
-
-    this.sharedService.upload$.subscribe(() => {
-      this.uploadData();
-    });
+    sharedService: SharedService,
+    changeDetectorRef: ChangeDetectorRef
+  ) {
+    super(sharedService, changeDetectorRef);
   }
 
-  waiting() {
-    this.loading = true;
-    this.connectionError = false;
+  getService() {
+    return this.competitorService.getScores(this.category);
   }
 
-  uploadData() {
-    this.waiting();
-    this.competitorService.getScores(this.category).subscribe({
-      next: (data) => {
-        this.loading = false;
-        this.dataSource = new MatTableDataSource<CompetitorScore>(data);
-      },
-      error: (error) => {
-        this.loading = false;
-        if (error.status === 0) {
-          this.connectionError = true;
-        }
-      },
-    });
+  handleSuccess(data: CompetitorScore[]): void {
+    this.dataSource = new MatTableDataSource<CompetitorScore>(data);
   }
 
   reloadData() {

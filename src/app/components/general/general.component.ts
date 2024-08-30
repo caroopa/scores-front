@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
   Injectable,
@@ -15,13 +16,13 @@ import {
   trigger,
 } from '@angular/animations';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatSort } from '@angular/material/sort';
-import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
+import { MatPaginatorIntl } from '@angular/material/paginator';
 import { GeneralService } from '../../services/general.service';
 import { FormsModule } from '@angular/forms';
 import { SharedService } from '../../services/shared.service';
 import { General, Score } from '../../schemas/domain';
 import { Subject } from 'rxjs';
+import { Base } from '../../schemas/base';
 
 @Injectable()
 export class SpanishPaginatorIntl extends MatPaginatorIntl {
@@ -66,7 +67,7 @@ export class SpanishPaginatorIntl extends MatPaginatorIntl {
     ]),
   ],
 })
-export class GeneralComponent {
+export class GeneralComponent extends Base<General> {
   firstPlace = 9;
   secondPlace = 5;
   thirdPlace = 2;
@@ -75,10 +76,10 @@ export class GeneralComponent {
   calculatingTotal = false;
   idCalculating!: number | null;
 
-  loading = false;
-  connectionError = false;
-  expanded!: General | null;
-  dataSource!: MatTableDataSource<General>;
+  // loading = false;
+  // connectionError = false;
+  // expanded!: General | null;
+  // dataSource!: MatTableDataSource<General>;
 
   displayedColumns = [
     'school',
@@ -91,49 +92,25 @@ export class GeneralComponent {
     'total',
   ];
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('input', { static: true }) searchInput!: ElementRef;
 
   constructor(
     private generalService: GeneralService,
-    private sharedService: SharedService,
-    private renderer: Renderer2
-  ) {}
-
-  ngOnInit() {
-    this.uploadData();
-
-    this.sharedService.reload$.subscribe(() => {
-      this.reloadData();
-    });
-
-    this.sharedService.upload$.subscribe(() => {
-      this.uploadData();
-    });
+    private renderer: Renderer2,
+    sharedService: SharedService,
+    changeDetectorRef: ChangeDetectorRef
+  ) {
+    super(sharedService, changeDetectorRef);
   }
 
-  waiting() {
-    this.loading = true;
-    this.connectionError = false;
+  getService() {
+    return this.generalService.getAll();
   }
 
-  uploadData() {
-    this.waiting();
-    this.generalService.getAll().subscribe({
-      next: (data) => {
-        this.loading = false;
-        this.dataSource = new MatTableDataSource<General>(data);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-      },
-      error: (error) => {
-        this.loading = false;
-        if (error.status === 0) {
-          this.connectionError = true;
-        }
-      },
-    });
+  handleSuccess(data: General[]): void {
+    this.dataSource = new MatTableDataSource<General>(data);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   reloadData() {
@@ -191,6 +168,7 @@ export class GeneralComponent {
   }
 
   ngAfterViewInit() {
+    //* for search bar effects
     if (this.searchInput) {
       this.renderer.listen(
         this.searchInput.nativeElement,
