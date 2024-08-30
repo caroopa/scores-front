@@ -75,7 +75,8 @@ export class GeneralComponent {
   calculatingTotal = false;
   idCalculating!: number | null;
 
-  showError = '';
+  loading = false;
+  connectionError = false;
   expanded!: General | null;
   dataSource!: MatTableDataSource<General>;
 
@@ -101,7 +102,6 @@ export class GeneralComponent {
   ) {}
 
   ngOnInit() {
-    // TODO: MANEJO DE ERRORES
     this.uploadData();
 
     this.sharedService.reload$.subscribe(() => {
@@ -113,26 +113,45 @@ export class GeneralComponent {
     });
   }
 
+  waiting() {
+    this.loading = true;
+    this.connectionError = false;
+  }
+
   uploadData() {
+    this.waiting();
     this.generalService.getAll().subscribe({
       next: (data) => {
-        // console.log(data);
+        this.loading = false;
         this.dataSource = new MatTableDataSource<General>(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       },
       error: (error) => {
-        this.showError = 'No se pudieron cargar los datos.';
-        console.log(error);
+        this.loading = false;
+        if (error.status === 0) {
+          this.connectionError = true;
+        }
       },
     });
   }
 
   reloadData() {
-    this.generalService.getAll().subscribe((data) => {
-      this.dataSource.data = data;
-      this.calculatingTotal = false;
-      this.idCalculating = null;
+    this.waiting();
+    this.generalService.getAll().subscribe({
+      next: (data) => {
+        this.loading = false;
+        this.dataSource.data = data;
+
+        this.calculatingTotal = false;
+        this.idCalculating = null;
+      },
+      error: (error) => {
+        this.loading = false;
+        if (error.status === 0) {
+          this.connectionError = true;
+        }
+      },
     });
   }
 
@@ -143,7 +162,7 @@ export class GeneralComponent {
   }
 
   calculateTotal(event: Event, element: General) {
-    // prevents service's double call
+    //* prevents service's double call
     event.stopPropagation();
     event.preventDefault();
 
@@ -160,12 +179,13 @@ export class GeneralComponent {
 
       this.generalService.calculateTotal(competitor_id, score).subscribe({
         error: (error) => {
-          console.error('Error calculating total:', error);
+          console.error('Error calculating:', error);
         },
       });
     }
   }
 
+  //* for search bar effects
   onInputBlur(event: FocusEvent) {
     const target = event.relatedTarget as HTMLElement;
     if (target && target.tagName === 'INPUT') {

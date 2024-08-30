@@ -32,22 +32,18 @@ import { MatSort } from '@angular/material/sort';
 })
 export class CompetitorComponent {
   @Input() category!: string;
-
-  showError = '';
+  loading = false;
+  connectionError = false;
   dataSource!: MatTableDataSource<CompetitorScore>;
   displayedColumns = ['name', 'belt', 'total'];
   expanded!: CompetitorScore | null;
 
-  // @ViewChild('competitorPag', { static: true }) paginator!: MatPaginator;
-  // @ViewChild(MatSort, { static: true }) sort!: MatSort;
-  
   constructor(
     private competitorService: CompetitorService,
     private sharedService: SharedService
   ) {}
 
   ngOnInit() {
-    // TODO: MANEJO DE ERRORES
     this.uploadData();
 
     this.sharedService.reload$.subscribe(() => {
@@ -59,22 +55,40 @@ export class CompetitorComponent {
     });
   }
 
+  waiting() {
+    this.loading = true;
+    this.connectionError = false;
+  }
+
   uploadData() {
+    this.waiting();
     this.competitorService.getScores(this.category).subscribe({
       next: (data) => {
-        // console.log(data);
+        this.loading = false;
         this.dataSource = new MatTableDataSource<CompetitorScore>(data);
       },
       error: (error) => {
-        this.showError = 'No se pudieron cargar los datos.';
-        console.log(error);
+        this.loading = false;
+        if (error.status === 0) {
+          this.connectionError = true;
+        }
       },
     });
   }
 
   reloadData() {
-    this.competitorService.getScores(this.category).subscribe((data) => {
-      this.dataSource = new MatTableDataSource<CompetitorScore>(data);
+    this.waiting();
+    this.competitorService.getScores(this.category).subscribe({
+      next: (data) => {
+        this.loading = false;
+        this.dataSource = new MatTableDataSource<CompetitorScore>(data);
+      },
+      error: (error) => {
+        this.loading = false;
+        if (error.status === 0) {
+          this.connectionError = true;
+        }
+      },
     });
   }
 }

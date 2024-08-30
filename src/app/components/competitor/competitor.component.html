@@ -1,3 +1,8 @@
+@if (!connectionError) { @if (loading) {
+<div class="spinner-container">
+  <mat-spinner diameter="70"></mat-spinner>
+</div>
+} @else {
 <table mat-table [dataSource]="dataSource" multiTemplateDataRows>
   <ng-container matColumnDef="name" class="header-cont">
     <th
@@ -83,8 +88,5 @@
     *matRowDef="let row; columns: ['expandedDetail']"
     class="expanded"
   ></tr>
-
-  <tr class="mat-row" *matNoDataRow>
-    <td class="mat-cell" colspan="displayedColumns.length">{{ showError }}</td>
-  </tr>
 </table>
+} }

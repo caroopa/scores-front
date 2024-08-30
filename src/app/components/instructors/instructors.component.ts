@@ -67,10 +67,13 @@ export class InstructorsComponent {
     });
   }
 
-  uploadData() {
+  waiting() {
     this.loading = true;
     this.connectionError = false;
+  }
 
+  uploadData() {
+    this.waiting();
     this.instructorService.getScores().subscribe({
       next: (data) => {
         this.loading = false;
@@ -88,15 +91,11 @@ export class InstructorsComponent {
   }
 
   reloadData() {
-    this.loading = true;
-    this.connectionError = false;
-    console.log("hola");
-    
-
+    this.waiting();
     this.instructorService.getScores().subscribe({
       next: (data) => {
-        this.dataSource.data = data;
         this.loading = false;
+        this.dataSource.data = data;
       },
       error: (error) => {
         this.loading = false;
