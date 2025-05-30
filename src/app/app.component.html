@@ -20,7 +20,13 @@
 </header>
 
 <mat-tab-group>
-  <mat-tab label="Ranking">
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <span class="icon-header">
+        <mat-icon>leaderboard</mat-icon>
+        Ranking
+      </span>
+    </ng-template>
     <div class="ranking-container">
       <div class="table-container">
         <h3>Instructores</h3>
@@ -39,7 +45,23 @@
     </div>
   </mat-tab>
 
-  <mat-tab label="Datos">
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <span class="icon-header">
+        <mat-icon>emoji_events</mat-icon>
+        Trofeos
+      </span>
+    </ng-template>
+    <app-trophies></app-trophies>
+  </mat-tab>
+
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <span class="icon-header">
+        <mat-icon>table_chart</mat-icon>
+        Datos
+      </span>
+    </ng-template>
     <app-general></app-general>
   </mat-tab>
 </mat-tab-group>

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { General, Score } from '../schemas/domain';
+import { General, Score, TrophyCount } from '../schemas/domain';
 import { apiURL, apiURLws } from './config';
 import { SharedService } from './shared.service';
 
@@ -16,7 +16,8 @@ export class GeneralService {
   }
 
   private connectWebSocket() {
-    this.webSocket = new WebSocket('wss://' + apiURLws + '/ws');
+    // this.webSocket = new WebSocket('wss://' + apiURLws + '/ws');
+    this.webSocket = new WebSocket('ws://' + apiURLws + '/ws');
 
     this.webSocket.onopen = () => {
       // console.log('Conectado al servidor WebSocket');
@@ -58,7 +59,10 @@ export class GeneralService {
     );
   }
 
-  disconnect() {
-    this.webSocket.close();
+  trophiesCounts() {
+    return this.http.get<TrophyCount[]>(
+      this.apiURLGeneral + `trophies_counts`,
+      {}
+    );
   }
 }

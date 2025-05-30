@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
 import { MaterialModule } from './material.module';
+// components
 import { GeneralComponent } from './components/general/general.component';
 import { InstructorsComponent } from './components/instructors/instructors.component';
 import { CompetitorComponent } from './components/competitor/competitor.component';
+import { TrophiesComponent } from './components/trophies/trophies.component';
+// services
 import { GeneralService } from './services/general.service';
 import { SharedService } from './services/shared.service';
 
@@ -11,11 +13,11 @@ import { SharedService } from './services/shared.service';
   selector: 'app-root',
   standalone: true,
   imports: [
-    RouterOutlet,
     MaterialModule,
     GeneralComponent,
     InstructorsComponent,
     CompetitorComponent,
+    TrophiesComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',

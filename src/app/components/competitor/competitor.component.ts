@@ -11,12 +11,11 @@ import { CompetitorService } from '../../services/competitor.service';
 import { SharedService } from '../../services/shared.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { CompetitorScore } from '../../schemas/domain';
-import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-competitor',
   standalone: true,
-  imports: [MaterialModule, MatSort],
+  imports: [MaterialModule],
   templateUrl: './competitor.component.html',
   styleUrl: './competitor.component.scss',
   animations: [

@@ -6,14 +6,14 @@ export interface General {
   age: number;
   belt: string;
   is_dan: boolean;
-  forms: number ;
+  forms: number;
   combat: number;
   jump: number;
   total: number;
 }
 
 export interface Score {
-  forms: number ;
+  forms: number;
   combat: number;
   jump: number;
 }
@@ -28,4 +28,10 @@ export interface CompetitorScore {
   belt: string;
   school: string;
   total: number;
+}
+
+export interface TrophyCount {
+  place: string;
+  count: number;
+  color: string;
 }

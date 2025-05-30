@@ -33,3 +33,14 @@ header h1 {
   height: auto !important;
   overflow: hidden !important;
 }
+
+.icon-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+::ng-deep .mdc-tab__text-label {
+  color: #093e72 !important;
+}
