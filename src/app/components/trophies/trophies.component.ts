@@ -46,8 +46,6 @@ export class TrophiesComponent {
       next: (data) => {
         this.loading = false;
         this.dataSource = new MatTableDataSource<TrophyCount>(data);
-        console.log(data);
-        
       },
       error: (error) => {
         this.loading = false;
