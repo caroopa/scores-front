@@ -4,6 +4,7 @@ export interface General {
   instructor: string;
   name: string;
   age: number;
+  genre: string;
   belt: string;
   is_dan: boolean;
   forms: number;
@@ -19,6 +20,7 @@ export interface Score {
 }
 
 export interface InstructorScore {
+  index: string | null;
   name: string;
   total: number;
 }

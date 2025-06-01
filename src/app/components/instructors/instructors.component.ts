@@ -44,7 +44,7 @@ export class InstructorsComponent {
   loading = false;
   connectionError = false;
   dataSource!: MatTableDataSource<InstructorScore>;
-  displayedColumns = ['name', 'total'];
+  displayedColumns = ['index', 'name', 'total'];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -78,7 +78,7 @@ export class InstructorsComponent {
         this.loading = false;
         this.dataSource = new MatTableDataSource<InstructorScore>(data);
         this.dataSource.paginator = this.paginator;
-                console.log(this.sort);
+        console.log(this.sort);
 
         this.dataSource.sort = this.sort;
         console.log(this.sort);
@@ -106,5 +106,12 @@ export class InstructorsComponent {
         }
       },
     });
+  }
+
+  // puestos
+  getRowIndex(i: number): number {
+    const pageIndex = this.paginator?.pageIndex ?? 0;
+    const pageSize = this.paginator?.pageSize ?? 10;
+    return pageIndex * pageSize + i + 1;
   }
 }
