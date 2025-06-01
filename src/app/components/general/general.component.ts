@@ -127,7 +127,7 @@ export class GeneralComponent {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
 
-        // 🎯 Filtro que ignora acentos y mayúsculas
+        //* Filtro que ignora acentos y mayúsculas
         this.dataSource.filterPredicate = (data: General, filter: string) => {
           const normalize = (str: string) =>
             str
@@ -172,8 +172,6 @@ export class GeneralComponent {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-    // 🔥 No recargues los datos
-    // this.reloadData(); ❌
   }
 
   calculateTotal(event: Event, element: General) {
