@@ -51,7 +51,7 @@ export class CompetitorComponent {
 
     this.sharedService.upload$.subscribe(() => {
       this.uploadData();
-    });
+    });    
   }
 
   waiting() {
