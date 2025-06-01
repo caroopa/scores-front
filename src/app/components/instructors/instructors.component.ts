@@ -2,7 +2,7 @@ import { Component, Injectable, ViewChild } from '@angular/core';
 import { MaterialModule } from '../../material.module';
 import { InstructorScore } from '../../schemas/domain';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatSort } from '@angular/material/sort';
 import { InstructorService } from '../../services/instructor.service';
 import { SharedService } from '../../services/shared.service';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
@@ -78,10 +78,7 @@ export class InstructorsComponent {
         this.loading = false;
         this.dataSource = new MatTableDataSource<InstructorScore>(data);
         this.dataSource.paginator = this.paginator;
-        console.log(this.sort);
-
         this.dataSource.sort = this.sort;
-        console.log(this.sort);
       },
       error: (error) => {
         this.loading = false;
@@ -106,12 +103,5 @@ export class InstructorsComponent {
         }
       },
     });
-  }
-
-  // puestos
-  getRowIndex(i: number): number {
-    const pageIndex = this.paginator?.pageIndex ?? 0;
-    const pageSize = this.paginator?.pageSize ?? 10;
-    return pageIndex * pageSize + i + 1;
   }
 }
