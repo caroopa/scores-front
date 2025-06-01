@@ -26,7 +26,6 @@ import { Subject } from 'rxjs';
 @Injectable()
 export class SpanishPaginatorIntl extends MatPaginatorIntl {
   override changes = new Subject<void>();
-
   override itemsPerPageLabel = 'Competidores por página:';
   override nextPageLabel = 'Siguiente';
   override previousPageLabel = 'Anterior';
@@ -43,6 +42,7 @@ export class SpanishPaginatorIntl extends MatPaginatorIntl {
     return `${page + 1} - ${amountPages} de ${length}`;
   };
 }
+
 @Component({
   selector: 'app-general',
   standalone: true,
@@ -126,6 +126,23 @@ export class GeneralComponent {
         this.dataSource = new MatTableDataSource<General>(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
+
+        // 🎯 Filtro que ignora acentos y mayúsculas
+        this.dataSource.filterPredicate = (data: General, filter: string) => {
+          const normalize = (str: string) =>
+            str
+              .toLowerCase()
+              .normalize('NFD')
+              .replace(/[\u0300-\u036f]/g, '');
+
+          const filterText = normalize(filter);
+
+          const searchable = normalize(
+            `${data.name} ${data.instructor} ${data.school}`
+          );
+
+          return searchable.includes(filterText);
+        };
       },
       error: (error) => {
         this.loading = false;
@@ -155,11 +172,11 @@ export class GeneralComponent {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-    this.reloadData();
+    // 🔥 No recargues los datos
+    // this.reloadData(); ❌
   }
 
   calculateTotal(event: Event, element: General) {
-    //* prevents service's double call
     event.stopPropagation();
     event.preventDefault();
 
@@ -182,7 +199,6 @@ export class GeneralComponent {
     }
   }
 
-  //* for search bar effects
   onInputBlur(event: FocusEvent) {
     const target = event.relatedTarget as HTMLElement;
     if (target && target.tagName === 'INPUT') {
