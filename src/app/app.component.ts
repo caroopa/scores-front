@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MaterialModule } from './material.module';
+import { MatSnackBar } from '@angular/material/snack-bar';
 // components
 import { GeneralComponent } from './components/general/general.component';
 import { InstructorsComponent } from './components/instructors/instructors.component';
@@ -26,31 +27,44 @@ export class AppComponent {
   selectedFile: File | null = null;
   isLoading = false;
 
+  private _snackBar = inject(MatSnackBar);
+
   constructor(
     private generalService: GeneralService,
     private sharedService: SharedService
   ) {}
 
   onFileSelected(event: Event) {
-    // TODO: VALIDAR FORMATO
-
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
+
+      if (!file.name.toLowerCase().endsWith('.csv')) {
+        this._snackBar.open('Sólo se permiten archivos CSV.', 'Cerrar', {
+          duration: 3000,
+        });
+        input.value = ''; 
+        return;
+      }
+
       this.isLoading = true;
 
       this.generalService.uploadData(file).subscribe({
         next: () => {
-          console.log('Archivo cargado correctamente.');
+          this._snackBar.open('Datos cargados correctamente', 'Cerrar', {
+            duration: 3000,
+          });
+          this.sharedService.upload();
         },
         error: (error) => {
           console.error('Error en la carga: ', error);
+          this._snackBar.open('Error en la carga del archivo', 'Cerrar', {
+            duration: 3000,
+          });
         },
         complete: () => {
-          this.sharedService.upload();
           this.isLoading = false;
           input.value = '';
-          // TODO: CARTEL DE ÉXITO
         },
       });
     }

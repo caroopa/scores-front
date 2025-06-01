@@ -44,3 +44,13 @@ header h1 {
 ::ng-deep .mdc-tab__text-label {
   color: #093e72 !important;
 }
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  img {
+    height: 50px;
+  }
+}
