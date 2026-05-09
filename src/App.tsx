@@ -16,10 +16,10 @@ import { LuCloudUpload, LuMedal, LuTable, LuTrophy } from "react-icons/lu";
 
 // -- domain --
 import { uploadData } from "./services/general";
-import GeneralTable from "./components/GeneralTable";
-import CompetitorTable from "./components/CompetitorTable";
-import TrophyTable from "./components/TrophyTable";
-import SchoolTable from "./components/SchoolTable";
+import GeneralTable from "./components/Table/GeneralTable";
+import CompetitorTable from "./components/Table/CompetitorTable";
+import TrophyTable from "./components/Table/TrophyTable";
+import SchoolTable from "./components/Table/SchoolTable";
 
 export default function App() {
 	const inputRef = useRef<HTMLInputElement>(null);

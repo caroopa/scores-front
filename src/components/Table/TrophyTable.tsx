@@ -13,7 +13,7 @@ import { LuTrophy } from "react-icons/lu";
 
 import { useQuery } from "@tanstack/react-query";
 
-import { trophiesCounts } from "../services/general";
+import { trophiesCounts } from "../../services/general";
 
 export default function TrophyTable() {
 	const {

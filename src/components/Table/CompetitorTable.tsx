@@ -1,11 +1,9 @@
 import { useMemo, useState } from "react";
 
 import {
-	Badge,
 	Box,
 	Button,
 	Center,
-	Drawer,
 	HStack,
 	Icon,
 	Popover,
@@ -14,19 +12,16 @@ import {
 	Stack,
 	Table,
 	Text,
-	VStack,
-	useBreakpointValue,
 } from "@chakra-ui/react";
 
 import { LuArrowUpDown, LuEye } from "react-icons/lu";
 
 import { useQuery } from "@tanstack/react-query";
 
-import type { CompetitorScore } from "../types/domain";
+import { getScores } from "../../services/competitor";
 
-import { getScores } from "../services/competitor";
-
-import CompetitorDetail from "./CompetitorDetail";
+import CompetitorDetail from "../CompetitorDetail";
+import BeltBadge from "../BeltBadge";
 
 type SortField = "name" | "belt" | "total";
 
@@ -38,14 +33,6 @@ export default function CompetitorTable({ category }: CompetitorTableProps) {
 	const [sortField, setSortField] = useState<SortField>("total");
 
 	const [ascending, setAscending] = useState(false);
-
-	const [selectedCompetitor, setSelectedCompetitor] =
-		useState<CompetitorScore | null>(null);
-
-	const isMobile = useBreakpointValue({
-		base: true,
-		md: false,
-	});
 
 	const {
 		data: competitors = [],
@@ -89,38 +76,6 @@ export default function CompetitorTable({ category }: CompetitorTableProps) {
 	};
 
 	const skeletonRows = competitors.length > 0 ? competitors.length : 6;
-
-	const renderCompetitorContent = (competitor: CompetitorScore) => (
-		<VStack align="start" gap="3">
-			<Text fontWeight="bold" fontSize="lg">
-				{competitor.name}
-			</Text>
-
-			<HStack wrap="wrap">
-				<Badge colorPalette="blue">{competitor.belt}</Badge>
-
-				<Badge colorPalette="green">{competitor.total} pts</Badge>
-			</HStack>
-
-			<Box>
-				<Text>Instructor</Text>
-
-				<Text>{competitor.instructor}</Text>
-			</Box>
-
-			<Box>
-				<Text>Escuela</Text>
-
-				<Text>{competitor.school}</Text>
-			</Box>
-
-			<Box>
-				<Text>Edad</Text>
-
-				<Text>{competitor.age}</Text>
-			</Box>
-		</VStack>
-	);
 
 	return (
 		<Stack gap="4">
@@ -186,67 +141,32 @@ export default function CompetitorTable({ category }: CompetitorTableProps) {
 									<Table.Row key={`${competitor.name}-${competitor.school}`}>
 										<Table.Cell>
 											<HStack gap="3">
-												{isMobile ? (
-													<Drawer.Root>
-														<Drawer.Trigger asChild>
-															<Button
-																size="xs"
-																variant="ghost"
-																onClick={() =>
-																	setSelectedCompetitor(competitor)
-																}
-															>
-																<Icon as={LuEye} />
-															</Button>
-														</Drawer.Trigger>
+												<Popover.Root lazyMount unmountOnExit>
+													<Popover.Trigger asChild>
+														<Button size="xs" variant="ghost">
+															<Icon as={LuEye} />
+														</Button>
+													</Popover.Trigger>
 
-														<Portal>
-															<Drawer.Backdrop />
+													<Portal>
+														<Popover.Positioner>
+															<Popover.Content>
+																<Popover.Arrow />
 
-															<Drawer.Positioner>
-																<Drawer.Content>
-																	<Drawer.Header>
-																		<Drawer.Title>Competidor</Drawer.Title>
-																	</Drawer.Header>
-
-																	<Drawer.Body>
-																		{selectedCompetitor &&
-																			renderCompetitorContent(
-																				selectedCompetitor,
-																			)}
-																	</Drawer.Body>
-																</Drawer.Content>
-															</Drawer.Positioner>
-														</Portal>
-													</Drawer.Root>
-												) : (
-													<Popover.Root lazyMount unmountOnExit>
-														<Popover.Trigger asChild>
-															<Button size="xs" variant="ghost">
-																<Icon as={LuEye} />
-															</Button>
-														</Popover.Trigger>
-
-														<Portal>
-															<Popover.Positioner>
-																<Popover.Content>
-																	<Popover.Arrow />
-
-																	<Popover.Body>
-																		<CompetitorDetail competitor={competitor} />
-																	</Popover.Body>
-																</Popover.Content>
-															</Popover.Positioner>
-														</Portal>
-													</Popover.Root>
-												)}
+																<Popover.Body>
+																	<CompetitorDetail competitor={competitor} />
+																</Popover.Body>
+															</Popover.Content>
+														</Popover.Positioner>
+													</Portal>
+												</Popover.Root>
 
 												<Text>{competitor.name}</Text>
 											</HStack>
 										</Table.Cell>
 
 										<Table.Cell>
-											<Badge colorPalette="blue">{competitor.belt}</Badge>
+											<BeltBadge belt={competitor.belt} />
 										</Table.Cell>
 
 										<Table.Cell>

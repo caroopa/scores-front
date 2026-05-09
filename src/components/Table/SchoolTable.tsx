@@ -14,7 +14,7 @@ import { MdAdd } from "react-icons/md";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { adjustSchoolScore, getSchoolScores } from "../services/school";
+import { adjustSchoolScore, getSchoolScores } from "../../services/school";
 
 export default function SchoolTable() {
 	const queryClient = useQueryClient();

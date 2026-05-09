@@ -1,5 +1,6 @@
-import { Badge, Text, VStack } from "@chakra-ui/react";
+import { HStack, Text, VStack } from "@chakra-ui/react";
 import type { General, CompetitorScore } from "../types/domain";
+import BeltBadge from "./BeltBadge";
 
 type CompetitorDetailProps = {
 	competitor: General | CompetitorScore;
@@ -12,11 +13,13 @@ export default function CompetitorDetail({
 
 	return (
 		<VStack align="start" gap="3">
-			<Text fontWeight="bold" fontSize="lg">
-				{competitor.name}
-			</Text>
+			<HStack w="100%" justify="space-between">
+				<Text fontWeight="bold" fontSize="lg">
+					{competitor.name}
+				</Text>
 
-			<Badge colorPalette="purple">{competitor.belt}</Badge>
+				<BeltBadge belt={competitor.belt} />
+			</HStack>
 
 			<Text>
 				<strong>Edad:</strong> {competitor.age}

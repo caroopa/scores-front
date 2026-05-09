@@ -28,15 +28,15 @@ import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import type { General, Score } from "../types/domain";
+import type { General, Score } from "../../types/domain";
 
 import {
 	calculateTotal,
 	getCompetitors,
 	type ScorePayload,
-} from "../services/general";
+} from "../../services/general";
 
-import CompetitorDetail from "./CompetitorDetail";
+import CompetitorDetail from "../CompetitorDetail";
 
 const radioOptions = [1, 2, 3, 0];
 
