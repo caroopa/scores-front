@@ -24,7 +24,6 @@ import SchoolTable from "./components/SchoolTable";
 export default function App() {
 	const inputRef = useRef<HTMLInputElement>(null);
 	const [loading, setLoading] = useState(false);
-	const [reloadKey, setReloadKey] = useState(0);
 
 	const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
 		try {
@@ -39,8 +38,6 @@ export default function App() {
 			setLoading(true);
 			await uploadData(file);
 			alert("Datos cargados correctamente");
-
-			setReloadKey((prev) => prev + 1);
 		} catch (error) {
 			console.error(error);
 
@@ -105,11 +102,11 @@ export default function App() {
 					</Tabs.List>
 
 					<Tabs.Content value="data">
-						<GeneralTable reloadKey={reloadKey} />
+						<GeneralTable />
 					</Tabs.Content>
 
 					<Tabs.Content value="trophies">
-						<TrophyTable reloadKey={reloadKey} />
+						<TrophyTable />
 					</Tabs.Content>
 
 					<Tabs.Content value="ranking">
@@ -118,21 +115,21 @@ export default function App() {
 								<Heading size="2xl" textAlign="center" mb="5">
 									Escuelas
 								</Heading>
-								<SchoolTable reloadKey={reloadKey} />
+								<SchoolTable />
 							</Box>
 
 							<Box>
 								<Heading size="2xl" textAlign="center" mb="5">
 									Top 10 Danes
 								</Heading>
-								<CompetitorTable category="dan" reloadKey={reloadKey} />
+								<CompetitorTable category="dan" />
 							</Box>
 
 							<Box>
 								<Heading size="2xl" textAlign="center" mb="5">
 									Top 10 Colores
 								</Heading>
-								<CompetitorTable category="color" reloadKey={reloadKey} />
+								<CompetitorTable category="color" />
 							</Box>
 						</HStack>
 					</Tabs.Content>

@@ -1,66 +1,64 @@
-import { useEffect, useState } from "react";
-
 import {
 	Box,
+	ButtonGroup,
+	Center,
+	IconButton,
+	Skeleton,
 	Table,
 	Text,
 	VStack,
-	Skeleton,
-	Center,
-	ButtonGroup,
-	IconButton,
 } from "@chakra-ui/react";
+
 import { FaMinus, FaPlusMinus } from "react-icons/fa6";
 import { MdAdd } from "react-icons/md";
 
-import type { SchoolScore } from "../types/domain";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
 import { adjustSchoolScore, getSchoolScores } from "../services/school";
 
-interface SchoolTableProps {
-	reloadKey: number;
-}
+export default function SchoolTable() {
+	const queryClient = useQueryClient();
 
-export default function SchoolTable({ reloadKey }: SchoolTableProps) {
-	const [schools, setSchools] = useState<SchoolScore[]>([]);
-	const [loading, setLoading] = useState(false);
+	const {
+		data: schools = [],
+		isLoading,
+		isFetching,
+	} = useQuery({
+		queryKey: ["schools"],
+		queryFn: getSchoolScores,
+	});
 
-	useEffect(() => {
-		let ignore = false;
+	const adjustMutation = useMutation({
+		mutationFn: ({ schoolId, delta }: { schoolId: number; delta: number }) =>
+			adjustSchoolScore(schoolId, delta),
 
-		const fetchSchools = async () => {
-			try {
-				setLoading(true);
+		onSuccess: async () => {
+			await Promise.all([
+				queryClient.invalidateQueries({
+					queryKey: ["schools"],
+				}),
 
-				const data = await getSchoolScores();
+				queryClient.invalidateQueries({
+					queryKey: ["competitors"],
+				}),
 
-				if (!ignore) {
-					setSchools(data);
-				}
-			} catch (error) {
-				console.error(error);
-			} finally {
-				if (!ignore) {
-					setLoading(false);
-				}
-			}
-		};
+				queryClient.invalidateQueries({
+					queryKey: ["scores"],
+				}),
 
-		fetchSchools();
-
-		return () => {
-			ignore = true;
-		};
-	}, [reloadKey]);
+				queryClient.invalidateQueries({
+					queryKey: ["trophies"],
+				}),
+			]);
+		},
+	});
 
 	const handleAdjustScore = async (schoolId: number, delta: number) => {
 		try {
-			await adjustSchoolScore(schoolId, delta);
-
-			setSchools((prev) =>
-				prev.map((s) =>
-					s.id_school === schoolId ? { ...s, total: s.total + delta } : s,
-				),
-			);
+			await adjustMutation.mutateAsync({
+				schoolId,
+				delta,
+			});
 		} catch (error) {
 			console.error(error);
 		}
@@ -75,12 +73,15 @@ export default function SchoolTable({ reloadKey }: SchoolTableProps) {
 							<Table.ColumnHeader>
 								<Text>#</Text>
 							</Table.ColumnHeader>
+
 							<Table.ColumnHeader>
 								<Text>Escuela</Text>
 							</Table.ColumnHeader>
+
 							<Table.ColumnHeader>
 								<Text>Total</Text>
 							</Table.ColumnHeader>
+
 							<Table.ColumnHeader>
 								<Center>
 									<FaPlusMinus />
@@ -88,57 +89,75 @@ export default function SchoolTable({ reloadKey }: SchoolTableProps) {
 							</Table.ColumnHeader>
 						</Table.Row>
 					</Table.Header>
-
 					<Table.Body>
-						{loading
-							? Array.from({ length: 6 }).map((_, i) => (
+						{isLoading || isFetching
+							? Array.from({
+									length: 6,
+								}).map((_, i) => (
 									<Table.Row key={i}>
-										{Array.from({ length: 3 }).map((__, j) => (
+										{Array.from({
+											length: 4,
+										}).map((__, j) => (
 											<Table.Cell key={j}>
 												<Skeleton height="20px" />
 											</Table.Cell>
 										))}
 									</Table.Row>
 								))
-							: schools.map((school, index) => (
-									<Table.Row key={index}>
-										<Table.Cell>{index + 1}</Table.Cell>
+							: schools.map((school, index) => {
+									const isUpdating =
+										adjustMutation.isPending &&
+										adjustMutation.variables?.schoolId === school.id_school;
 
-										<Table.Cell>
-											<Text>{school.name}</Text>
-										</Table.Cell>
+									return (
+										<Table.Row key={school.id_school}>
+											<Table.Cell>{index + 1}</Table.Cell>
 
-										<Table.Cell>
-											<Center>
-												<Text fontWeight="bold">{school.total}</Text>
-											</Center>
-										</Table.Cell>
+											<Table.Cell>
+												<Text>{school.name}</Text>
+											</Table.Cell>
 
-										<Table.Cell>
-											<ButtonGroup size="sm" variant="outline">
-												<IconButton
-													aria-label="increase"
-													onClick={() => handleAdjustScore(school.id_school, 1)}
-												>
-													<MdAdd />
-												</IconButton>
-												<IconButton
-													aria-label="decrease"
-													onClick={() =>
-														handleAdjustScore(school.id_school, -1)
-													}
-												>
-													<FaMinus />
-												</IconButton>
-											</ButtonGroup>
-										</Table.Cell>
-									</Table.Row>
-								))}
-					</Table.Body>
+											<Table.Cell>
+												<Center>
+													{isUpdating ? (
+														<Skeleton height="20px" width="40px" />
+													) : (
+														<Text fontWeight="bold">{school.total}</Text>
+													)}
+												</Center>
+											</Table.Cell>
+
+											<Table.Cell>
+												<ButtonGroup size="sm" variant="outline">
+													<IconButton
+														aria-label="increase"
+														disabled={isUpdating}
+														onClick={() =>
+															handleAdjustScore(school.id_school, 1)
+														}
+													>
+														<MdAdd />
+													</IconButton>
+
+													<IconButton
+														aria-label="decrease"
+														disabled={isUpdating}
+														onClick={() =>
+															handleAdjustScore(school.id_school, -1)
+														}
+													>
+														<FaMinus />
+													</IconButton>
+												</ButtonGroup>
+											</Table.Cell>
+										</Table.Row>
+									);
+								})}
+					</Table.Body>{" "}
 				</Table.Root>
 			</Box>
 
-			{!loading && schools.length === 0 && (
+			{!isLoading && schools.length === 0 && (
 				<Box borderWidth="1px" borderRadius="xl" p="8" textAlign="center">
 					<Text>No hay escuelas 👀</Text>
 				</Box>

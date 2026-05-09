@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+
 import {
 	Badge,
 	Box,
@@ -23,10 +24,18 @@ import {
 
 import { LuArrowUpDown, LuEye, LuSearch } from "react-icons/lu";
 
+import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
+
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
 import type { General, Score } from "../types/domain";
 
-import { calculateTotal, getCompetitors } from "../services/general";
-import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
+import {
+	calculateTotal,
+	getCompetitors,
+	type ScorePayload,
+} from "../services/general";
+
 import CompetitorDetail from "./CompetitorDetail";
 
 const radioOptions = [1, 2, 3, 0];
@@ -36,51 +45,53 @@ interface SortConfig {
 	ascending: boolean;
 }
 
-interface GeneralTableProps {
-	reloadKey: number;
-}
+type MutationVariables = {
+	competitorId: number;
+	score: ScorePayload;
+};
 
-export default function GeneralTable({ reloadKey }: GeneralTableProps) {
-	const [competitors, setCompetitors] = useState<General[]>([]);
-	const [loading, setLoading] = useState(false);
+export default function GeneralTable() {
+	const queryClient = useQueryClient();
+
 	const [search, setSearch] = useState("");
 	const [currentPage, setCurrentPage] = useState(1);
 	const [pageSize, setPageSize] = useState(5);
 
-	const [sortConfig, setSortConfig] = useState<SortConfig>({
-		field: "total",
-		ascending: false,
+	const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
+
+	const {
+		data: competitors = [],
+		isLoading,
+		isFetching,
+	} = useQuery({
+		queryKey: ["competitors"],
+		queryFn: getCompetitors,
 	});
 
-	const [calculatingId, setCalculatingId] = useState<number | null>(null);
+	const calculateMutation = useMutation({
+		mutationFn: ({ competitorId, score }: MutationVariables) =>
+			calculateTotal(competitorId, score),
 
-	useEffect(() => {
-		let ignore = false;
+		onSuccess: async () => {
+			await Promise.all([
+				queryClient.invalidateQueries({
+					queryKey: ["competitors"],
+				}),
 
-		const fetchCompetitors = async () => {
-			try {
-				setLoading(true);
+				queryClient.invalidateQueries({
+					queryKey: ["schools"],
+				}),
 
-				const data = await getCompetitors();
+				queryClient.invalidateQueries({
+					queryKey: ["scores"],
+				}),
 
-				if (!ignore) {
-					setCompetitors(data);
-				}
-			} catch (error) {
-				console.error(error);
-			} finally {
-				if (!ignore) {
-					setLoading(false);
-				}
-			}
-		};
-
-		fetchCompetitors();
-
-		return () => {
-			ignore = true;
-		};
-	}, [reloadKey]);
+				queryClient.invalidateQueries({
+					queryKey: ["trophies"],
+				}),
+			]);
+		},
+	});
 
 	const normalizeText = (text: string) =>
 		text
@@ -93,13 +104,17 @@ export default function GeneralTable({ reloadKey }: GeneralTableProps) {
 
 		const filtered = competitors.filter((competitor) => {
 			const searchable = normalizeText(`
-              ${competitor.name}
-              ${competitor.school}
-              ${competitor.instructor}
-            `);
+					${competitor.name}
+					${competitor.school}
+					${competitor.instructor}
+				`);
 
 			return searchable.includes(normalizedSearch);
 		});
+
+		if (!sortConfig) {
+			return filtered;
+		}
 
 		return filtered.sort((a, b) => {
 			const { field, ascending } = sortConfig;
@@ -128,10 +143,19 @@ export default function GeneralTable({ reloadKey }: GeneralTableProps) {
 	const endItem = Math.min(currentPage * pageSize, filteredCompetitors.length);
 
 	const handleSort = (field: keyof General) => {
-		setSortConfig((prev) => ({
-			field,
-			ascending: prev.field === field ? !prev.ascending : true,
-		}));
+		setSortConfig((prev) => {
+			if (!prev || prev.field !== field) {
+				return {
+					field,
+					ascending: true,
+				};
+			}
+
+			return {
+				field,
+				ascending: !prev.ascending,
+			};
+		});
 	};
 
 	const handleCalculateTotal = async (
@@ -139,41 +163,21 @@ export default function GeneralTable({ reloadKey }: GeneralTableProps) {
 		field: keyof Score,
 		value: number,
 	) => {
+		const score: ScorePayload = {
+			forms: field === "forms" ? value : competitor.forms,
+
+			combat: field === "combat" ? value : competitor.combat,
+
+			jump: field === "jump" ? value : competitor.jump,
+		};
+
 		try {
-			setCalculatingId(competitor.id_competitor);
-
-			const updatedCompetitors = competitors.map((item) =>
-				item.id_competitor === competitor.id_competitor
-					? {
-							...item,
-							[field]: value,
-						}
-					: item,
-			);
-
-			setCompetitors(updatedCompetitors);
-
-			const updatedCompetitor = updatedCompetitors.find(
-				(item) => item.id_competitor === competitor.id_competitor,
-			);
-
-			if (!updatedCompetitor) return;
-
-			const score: Score = {
-				forms: updatedCompetitor.forms,
-				combat: updatedCompetitor.combat,
-				jump: updatedCompetitor.jump,
-			};
-
-			await calculateTotal(competitor.id_competitor, score);
-
-			const refreshed = await getCompetitors();
-
-			setCompetitors(refreshed);
+			await calculateMutation.mutateAsync({
+				competitorId: competitor.id_competitor,
+				score,
+			});
 		} catch (error) {
 			console.error(error);
-		} finally {
-			setCalculatingId(null);
 		}
 	};
 
@@ -243,7 +247,7 @@ export default function GeneralTable({ reloadKey }: GeneralTableProps) {
 
 	return (
 		<VStack align="stretch" gap="5">
-			<InputGroup startElement={<LuSearch />}>
+			<InputGroup flex="1" startElement={<LuSearch />}>
 				<Input
 					placeholder="Buscar competidor..."
 					value={search}
@@ -314,7 +318,7 @@ export default function GeneralTable({ reloadKey }: GeneralTableProps) {
 					</Table.Header>
 
 					<Table.Body>
-						{loading
+						{isLoading || isFetching
 							? Array.from({
 									length: 8,
 								}).map((_, index) => (
@@ -328,74 +332,83 @@ export default function GeneralTable({ reloadKey }: GeneralTableProps) {
 										))}
 									</Table.Row>
 								))
-							: paginatedCompetitors.map((competitor) => (
-									<Table.Row key={competitor.id_competitor}>
-										<Table.Cell>{competitor.school}</Table.Cell>
+							: paginatedCompetitors.map((competitor) => {
+									const isUpdating =
+										calculateMutation.isPending &&
+										calculateMutation.variables?.competitorId ===
+											competitor.id_competitor;
 
-										<Table.Cell>{competitor.instructor}</Table.Cell>
+									return (
+										<Table.Row key={competitor.id_competitor}>
+											<Table.Cell>{competitor.school}</Table.Cell>
 
-										<Table.Cell>
-											<HStack gap="3">
-												<Popover.Root lazyMount unmountOnExit>
-													<Popover.Trigger asChild>
-														<Button size="xs" variant="ghost">
-															<Icon as={LuEye} />
-														</Button>
-													</Popover.Trigger>
+											<Table.Cell>{competitor.instructor}</Table.Cell>
 
-													<Portal>
-														<Popover.Positioner>
-															<Popover.Content>
-																<Popover.Arrow />
+											<Table.Cell>
+												<HStack gap="3">
+													<Popover.Root lazyMount unmountOnExit>
+														<Popover.Trigger asChild>
+															<Button size="xs" variant="ghost">
+																<Icon as={LuEye} />
+															</Button>
+														</Popover.Trigger>
 
-																<Popover.Body>
-																	<CompetitorDetail competitor={competitor} />
-																</Popover.Body>
-															</Popover.Content>
-														</Popover.Positioner>
-													</Portal>
-												</Popover.Root>
+														<Portal>
+															<Popover.Positioner>
+																<Popover.Content>
+																	<Popover.Arrow />
 
-												<Text>{competitor.name}</Text>
-											</HStack>
-										</Table.Cell>
+																	<Popover.Body>
+																		<CompetitorDetail competitor={competitor} />
+																	</Popover.Body>
+																</Popover.Content>
+															</Popover.Positioner>
+														</Portal>
+													</Popover.Root>
 
-										<Table.Cell>
-											<Badge colorPalette={competitor.is_dan ? "red" : "green"}>
-												{competitor.is_dan ? "DAN" : "COLOR"}
-											</Badge>
-										</Table.Cell>
+													<Text>{competitor.name}</Text>
+												</HStack>
+											</Table.Cell>
 
-										<Table.Cell>
-											{renderRadioGroup(competitor, "forms")}
-										</Table.Cell>
+											<Table.Cell>
+												<Badge
+													colorPalette={competitor.is_dan ? "red" : "green"}
+												>
+													{competitor.is_dan ? "DAN" : "COLOR"}
+												</Badge>
+											</Table.Cell>
 
-										<Table.Cell>
-											{renderRadioGroup(competitor, "combat")}
-										</Table.Cell>
+											<Table.Cell>
+												{renderRadioGroup(competitor, "forms", isUpdating)}
+											</Table.Cell>
 
-										<Table.Cell>
-											{competitor.is_dan
-												? "-"
-												: renderRadioGroup(competitor, "jump")}
-										</Table.Cell>
+											<Table.Cell>
+												{renderRadioGroup(competitor, "combat", isUpdating)}
+											</Table.Cell>
 
-										<Table.Cell>
-											<Center>
-												{calculatingId === competitor.id_competitor ? (
-													<Spinner size="sm" />
-												) : (
-													<Text fontWeight="bold">{competitor.total}</Text>
-												)}
-											</Center>
-										</Table.Cell>
-									</Table.Row>
-								))}
+											<Table.Cell>
+												{competitor.is_dan
+													? "-"
+													: renderRadioGroup(competitor, "jump", isUpdating)}
+											</Table.Cell>
+
+											<Table.Cell>
+												<Center>
+													{isUpdating ? (
+														<Spinner size="sm" />
+													) : (
+														<Text fontWeight="bold">{competitor.total}</Text>
+													)}
+												</Center>
+											</Table.Cell>
+										</Table.Row>
+									);
+								})}
 					</Table.Body>
 				</Table.Root>
 			</Box>
 
-			{!loading && filteredCompetitors.length > 0 && (
+			{!isLoading && filteredCompetitors.length > 0 && (
 				<HStack justify="space-between" wrap="wrap" gap="4">
 					<HStack>
 						<Text fontSize="sm" color="gray.600">
@@ -456,7 +469,7 @@ export default function GeneralTable({ reloadKey }: GeneralTableProps) {
 				</HStack>
 			)}
 
-			{!loading && filteredCompetitors.length === 0 && (
+			{!isLoading && filteredCompetitors.length === 0 && (
 				<Box borderWidth="1px" borderRadius="xl" p="8" textAlign="center">
 					<Text>No se encontraron competidores 👀</Text>
 				</Box>

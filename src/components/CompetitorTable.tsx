@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+
 import {
 	Badge,
 	Box,
@@ -19,25 +20,23 @@ import {
 
 import { LuArrowUpDown, LuEye } from "react-icons/lu";
 
+import { useQuery } from "@tanstack/react-query";
+
 import type { CompetitorScore } from "../types/domain";
+
 import { getScores } from "../services/competitor";
+
 import CompetitorDetail from "./CompetitorDetail";
 
 type SortField = "name" | "belt" | "total";
 
 interface CompetitorTableProps {
 	category: string;
-	reloadKey: number;
 }
 
-export default function CompetitorTable({
-	category,
-	reloadKey,
-}: CompetitorTableProps) {
-	const [competitors, setCompetitors] = useState<CompetitorScore[]>([]);
-	const [loading, setLoading] = useState(false);
-
+export default function CompetitorTable({ category }: CompetitorTableProps) {
 	const [sortField, setSortField] = useState<SortField>("total");
+
 	const [ascending, setAscending] = useState(false);
 
 	const [selectedCompetitor, setSelectedCompetitor] =
@@ -48,33 +47,14 @@ export default function CompetitorTable({
 		md: false,
 	});
 
-	useEffect(() => {
-		let ignore = false;
-
-		const fetchCompetitors = async () => {
-			try {
-				setLoading(true);
-
-				const data = await getScores(category);
-
-				if (!ignore) {
-					setCompetitors(data);
-				}
-			} catch (error) {
-				console.error(error);
-			} finally {
-				if (!ignore) {
-					setLoading(false);
-				}
-			}
-		};
-
-		fetchCompetitors();
-
-		return () => {
-			ignore = true;
-		};
-	}, [category, reloadKey]);
+	const {
+		data: competitors = [],
+		isLoading,
+		isFetching,
+	} = useQuery({
+		queryKey: ["scores", category],
+		queryFn: () => getScores(category),
+	});
 
 	const sortedCompetitors = useMemo(() => {
 		return [...competitors].sort((a, b) => {
@@ -99,10 +79,12 @@ export default function CompetitorTable({
 	const handleSort = (field: SortField) => {
 		if (field === sortField) {
 			setAscending((prev) => !prev);
+
 			return;
 		}
 
 		setSortField(field);
+
 		setAscending(true);
 	};
 
@@ -180,8 +162,10 @@ export default function CompetitorTable({
 					</Table.Header>
 
 					<Table.Body>
-						{loading
-							? Array.from({ length: 6 }).map((_, index) => (
+						{isLoading || isFetching
+							? Array.from({
+									length: 6,
+								}).map((_, index) => (
 									<Table.Row key={index}>
 										<Table.Cell>
 											<Skeleton height="20px" />
@@ -247,9 +231,7 @@ export default function CompetitorTable({
 																	<Popover.Arrow />
 
 																	<Popover.Body>
-																		<CompetitorDetail
-																			competitor={competitor}
-																		/>
+																		<CompetitorDetail competitor={competitor} />
 																	</Popover.Body>
 																</Popover.Content>
 															</Popover.Positioner>
@@ -276,7 +258,7 @@ export default function CompetitorTable({
 				</Table.Root>
 			</Box>
 
-			{!loading && sortedCompetitors.length === 0 && (
+			{!isLoading && sortedCompetitors.length === 0 && (
 				<Box borderWidth="1px" borderRadius="lg" p="8" textAlign="center">
 					<Text>No se encontraron competidores 👀</Text>
 				</Box>
