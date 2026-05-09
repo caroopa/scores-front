@@ -19,7 +19,7 @@ import { uploadData } from "./services/general";
 import GeneralTable from "./components/GeneralTable";
 import CompetitorTable from "./components/CompetitorTable";
 import TrophyTable from "./components/TrophyTable";
-import InstructorTable from "./components/InstructorTable";
+import SchoolTable from "./components/SchoolTable";
 
 export default function App() {
 	const inputRef = useRef<HTMLInputElement>(null);
@@ -116,9 +116,9 @@ export default function App() {
 						<HStack justify="space-between" align="center">
 							<Box>
 								<Heading size="2xl" textAlign="center" mb="5">
-									Instructores
+									Escuelas
 								</Heading>
-								<InstructorTable reloadKey={reloadKey} />
+								<SchoolTable reloadKey={reloadKey} />
 							</Box>
 
 							<Box>
