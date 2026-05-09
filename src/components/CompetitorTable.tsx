@@ -88,6 +88,8 @@ export default function CompetitorTable({ category }: CompetitorTableProps) {
 		setAscending(true);
 	};
 
+	const skeletonRows = competitors.length > 0 ? competitors.length : 6;
+
 	const renderCompetitorContent = (competitor: CompetitorScore) => (
 		<VStack align="start" gap="3">
 			<Text fontWeight="bold" fontSize="lg">
@@ -164,19 +166,19 @@ export default function CompetitorTable({ category }: CompetitorTableProps) {
 					<Table.Body>
 						{isLoading || isFetching
 							? Array.from({
-									length: 6,
+									length: skeletonRows,
 								}).map((_, index) => (
 									<Table.Row key={index}>
 										<Table.Cell>
-											<Skeleton height="20px" />
+											<Skeleton height="40px" />
 										</Table.Cell>
 
 										<Table.Cell>
-											<Skeleton height="20px" />
+											<Skeleton height="40px" />
 										</Table.Cell>
 
 										<Table.Cell>
-											<Skeleton height="20px" />
+											<Skeleton height="40px" />
 										</Table.Cell>
 									</Table.Row>
 								))

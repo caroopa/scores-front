@@ -25,6 +25,8 @@ export default function TrophyTable() {
 		queryFn: trophiesCounts,
 	});
 
+	const skeletonRows = trophies.length > 0 ? trophies.length : 3;
+
 	return (
 		<VStack align="stretch" gap="5">
 			<Box borderWidth="1px" overflow="hidden">
@@ -48,7 +50,7 @@ export default function TrophyTable() {
 					<Table.Body>
 						{isLoading || isFetching
 							? Array.from({
-									length: 4,
+									length: skeletonRows,
 								}).map((_, index) => (
 									<Table.Row key={index}>
 										{Array.from({

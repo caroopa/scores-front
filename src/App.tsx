@@ -110,28 +110,31 @@ export default function App() {
 					</Tabs.Content>
 
 					<Tabs.Content value="ranking">
-						<HStack justify="space-between" align="center">
-							<Box>
+						<HStack justify="space-between" align="start" gap="5">
+							<Box flex="1">
 								<Heading size="2xl" textAlign="center" mb="5">
 									Escuelas
 								</Heading>
+
 								<SchoolTable />
 							</Box>
 
-							<Box>
+							<Box flex="1">
 								<Heading size="2xl" textAlign="center" mb="5">
 									Top 10 Danes
 								</Heading>
+
 								<CompetitorTable category="dan" />
 							</Box>
 
-							<Box>
+							<Box flex="1">
 								<Heading size="2xl" textAlign="center" mb="5">
 									Top 10 Colores
 								</Heading>
+
 								<CompetitorTable category="color" />
 							</Box>
-						</HStack>
+						</HStack>{" "}
 					</Tabs.Content>
 				</Tabs.Root>
 			</Box>

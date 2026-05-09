@@ -6,7 +6,7 @@ import {
 	Skeleton,
 	Table,
 	Text,
-	VStack,
+	Stack,
 } from "@chakra-ui/react";
 
 import { FaMinus, FaPlusMinus } from "react-icons/fa6";
@@ -64,14 +64,16 @@ export default function SchoolTable() {
 		}
 	};
 
+	const skeletonRows = schools.length > 0 ? schools.length : 6;
+
 	return (
-		<VStack align="stretch" gap="5">
+		<Stack gap="5">
 			<Box borderWidth="1px" overflowX="auto">
 				<Table.Root size="sm" variant="outline">
-					<Table.Header>
+					<Table.Header h="47px">
 						<Table.Row>
 							<Table.ColumnHeader>
-								<Text>#</Text>
+								<Text textAlign="center">#</Text>
 							</Table.ColumnHeader>
 
 							<Table.ColumnHeader>
@@ -79,7 +81,7 @@ export default function SchoolTable() {
 							</Table.ColumnHeader>
 
 							<Table.ColumnHeader>
-								<Text>Total</Text>
+								<Text textAlign="center">Total</Text>
 							</Table.ColumnHeader>
 
 							<Table.ColumnHeader>
@@ -92,14 +94,14 @@ export default function SchoolTable() {
 					<Table.Body>
 						{isLoading || isFetching
 							? Array.from({
-									length: 6,
+									length: skeletonRows,
 								}).map((_, i) => (
 									<Table.Row key={i}>
 										{Array.from({
 											length: 4,
 										}).map((__, j) => (
 											<Table.Cell key={j}>
-												<Skeleton height="20px" />
+												<Skeleton height="40px" />
 											</Table.Cell>
 										))}
 									</Table.Row>
@@ -111,7 +113,9 @@ export default function SchoolTable() {
 
 									return (
 										<Table.Row key={school.id_school}>
-											<Table.Cell>{index + 1}</Table.Cell>
+											<Table.Cell>
+												<Center>{index + 1}</Center>
+											</Table.Cell>
 
 											<Table.Cell>
 												<Text>{school.name}</Text>
@@ -120,7 +124,7 @@ export default function SchoolTable() {
 											<Table.Cell>
 												<Center>
 													{isUpdating ? (
-														<Skeleton height="20px" width="40px" />
+														<Skeleton height="40px" width="40px" />
 													) : (
 														<Text fontWeight="bold">{school.total}</Text>
 													)}
@@ -128,40 +132,42 @@ export default function SchoolTable() {
 											</Table.Cell>
 
 											<Table.Cell>
-												<ButtonGroup size="sm" variant="outline">
-													<IconButton
-														aria-label="increase"
-														disabled={isUpdating}
-														onClick={() =>
-															handleAdjustScore(school.id_school, 1)
-														}
-													>
-														<MdAdd />
-													</IconButton>
+												<Center>
+													<ButtonGroup size="sm" variant="outline">
+														<IconButton
+															aria-label="increase"
+															disabled={isUpdating}
+															onClick={() =>
+																handleAdjustScore(school.id_school, 1)
+															}
+														>
+															<MdAdd />
+														</IconButton>
 
-													<IconButton
-														aria-label="decrease"
-														disabled={isUpdating}
-														onClick={() =>
-															handleAdjustScore(school.id_school, -1)
-														}
-													>
-														<FaMinus />
-													</IconButton>
-												</ButtonGroup>
+														<IconButton
+															aria-label="decrease"
+															disabled={isUpdating}
+															onClick={() =>
+																handleAdjustScore(school.id_school, -1)
+															}
+														>
+															<FaMinus />
+														</IconButton>
+													</ButtonGroup>
+												</Center>
 											</Table.Cell>
 										</Table.Row>
 									);
 								})}
-					</Table.Body>{" "}
+					</Table.Body>
 				</Table.Root>
 			</Box>
 
 			{!isLoading && schools.length === 0 && (
-				<Box borderWidth="1px" borderRadius="xl" p="8" textAlign="center">
+				<Box borderWidth="1px" p="8" textAlign="center">
 					<Text>No hay escuelas 👀</Text>
 				</Box>
 			)}
-		</VStack>
+		</Stack>
 	);
 }

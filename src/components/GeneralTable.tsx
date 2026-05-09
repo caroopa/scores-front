@@ -320,14 +320,14 @@ export default function GeneralTable() {
 					<Table.Body>
 						{isLoading || isFetching
 							? Array.from({
-									length: 8,
+									length: pageSize,
 								}).map((_, index) => (
 									<Table.Row key={index}>
 										{Array.from({
 											length: 8,
 										}).map((_, cellIndex) => (
 											<Table.Cell key={cellIndex}>
-												<Skeleton height="20px" />
+												<Skeleton height="40px" />
 											</Table.Cell>
 										))}
 									</Table.Row>
