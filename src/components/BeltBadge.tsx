@@ -104,16 +104,14 @@ const beltConfig: Record<
 };
 
 export default function BeltBadge({ belt }: { belt: string }) {
-	const normalizedBelt = belt.toUpperCase().trim();
-
-	const config = beltConfig[normalizedBelt] ?? {
-		colorPalette: "gray",
-		variant: "subtle",
-	};
+	const displayBelt = belt.replace("PUNTA", "PT.");
 
 	return (
-		<Badge colorPalette={config.colorPalette} variant={config.variant}>
-			{normalizedBelt}
+		<Badge
+			colorPalette={beltConfig[belt].colorPalette}
+			variant={beltConfig[belt].variant}
+		>
+			{displayBelt}
 		</Badge>
 	);
 }
