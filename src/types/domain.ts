@@ -20,7 +20,7 @@ export interface Score {
 }
 
 export interface SchoolScore {
-  id_school: number;
+	id_school: number;
 	name: string;
 	total: number;
 }
@@ -34,8 +34,21 @@ export interface CompetitorScore {
 	total: number;
 }
 
+export interface ScorePayload {
+	forms: number;
+	combat: number;
+	jump: number;
+}
+
 export interface TrophyCount {
 	place: string;
 	count: number;
 	color: string;
+}
+
+export type MedalType = "gold" | "silver" | "bronze";
+
+export interface TrophyAdjustment {
+	medal_type: MedalType;
+	value: number;
 }

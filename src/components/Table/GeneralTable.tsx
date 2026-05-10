@@ -28,13 +28,9 @@ import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import type { General, Score } from "../../types/domain";
+import type { General, Score, ScorePayload } from "../../types/domain";
 
-import {
-	calculateTotal,
-	getCompetitors,
-	type ScorePayload,
-} from "../../services/general";
+import { calculateTotal, getCompetitors } from "../../services/general";
 
 import CompetitorDetail from "../CompetitorDetail";
 
@@ -260,10 +256,10 @@ export default function GeneralTable() {
 			</InputGroup>
 
 			<Box borderWidth="1px" overflowX="auto">
-				<Table.Root size="sm" variant="outline" interactive>
+				<Table.Root size="sm" variant="outline" interactive tableLayout="fixed">
 					<Table.Header>
 						<Table.Row>
-							<Table.ColumnHeader>
+							<Table.ColumnHeader width="14%">
 								<Button
 									size="xs"
 									variant="ghost"
@@ -274,7 +270,7 @@ export default function GeneralTable() {
 								</Button>
 							</Table.ColumnHeader>
 
-							<Table.ColumnHeader>
+							<Table.ColumnHeader width="14%">
 								<Button
 									size="xs"
 									variant="ghost"
@@ -285,7 +281,7 @@ export default function GeneralTable() {
 								</Button>
 							</Table.ColumnHeader>
 
-							<Table.ColumnHeader>
+							<Table.ColumnHeader width="22%">
 								<Button
 									size="xs"
 									variant="ghost"
@@ -296,23 +292,33 @@ export default function GeneralTable() {
 								</Button>
 							</Table.ColumnHeader>
 
-							<Table.ColumnHeader>Categoría</Table.ColumnHeader>
+							<Table.ColumnHeader width="8%">
+								<Text textAlign="center">Categoría</Text>
+							</Table.ColumnHeader>
 
-							<Table.ColumnHeader>Formas</Table.ColumnHeader>
+							<Table.ColumnHeader width="13%">
+								<Text textAlign="center">Formas</Text>
+							</Table.ColumnHeader>
 
-							<Table.ColumnHeader>Combate</Table.ColumnHeader>
+							<Table.ColumnHeader width="13%">
+								<Text textAlign="center">Combate</Text>
+							</Table.ColumnHeader>
 
-							<Table.ColumnHeader>Salto</Table.ColumnHeader>
+							<Table.ColumnHeader width="10%">
+								<Text textAlign="center">Salto</Text>
+							</Table.ColumnHeader>
 
-							<Table.ColumnHeader>
-								<Button
-									size="xs"
-									variant="ghost"
-									onClick={() => handleSort("total")}
-								>
-									TOTAL
-									<Icon as={LuArrowUpDown} />
-								</Button>
+							<Table.ColumnHeader width="6%">
+								<Center>
+									<Button
+										size="xs"
+										variant="ghost"
+										onClick={() => handleSort("total")}
+									>
+										TOTAL
+										<Icon as={LuArrowUpDown} />
+									</Button>
+								</Center>
 							</Table.ColumnHeader>
 						</Table.Row>
 					</Table.Header>
@@ -323,13 +329,37 @@ export default function GeneralTable() {
 									length: pageSize,
 								}).map((_, index) => (
 									<Table.Row key={index}>
-										{Array.from({
-											length: 8,
-										}).map((_, cellIndex) => (
-											<Table.Cell key={cellIndex}>
-												<Skeleton height="40px" />
-											</Table.Cell>
-										))}
+										<Table.Cell>
+											<Skeleton height="20px" width="100px" />
+										</Table.Cell>
+
+										<Table.Cell>
+											<Skeleton height="20px" width="100px" />
+										</Table.Cell>
+
+										<Table.Cell>
+											<Skeleton height="20px" width="180px" />
+										</Table.Cell>
+
+										<Table.Cell>
+											<Skeleton height="20px" width="60px" mx="auto" />
+										</Table.Cell>
+
+										<Table.Cell>
+											<Skeleton height="40px" width="140px" mx="auto" />
+										</Table.Cell>
+
+										<Table.Cell>
+											<Skeleton height="40px" width="140px" mx="auto" />
+										</Table.Cell>
+
+										<Table.Cell>
+											<Skeleton height="40px" width="140px" mx="auto" />
+										</Table.Cell>
+
+										<Table.Cell>
+											<Skeleton height="20px" width="40px" mx="auto" />
+										</Table.Cell>
 									</Table.Row>
 								))
 							: paginatedCompetitors.map((competitor) => {
@@ -340,12 +370,16 @@ export default function GeneralTable() {
 
 									return (
 										<Table.Row key={competitor.id_competitor}>
-											<Table.Cell>{competitor.school}</Table.Cell>
-
-											<Table.Cell>{competitor.instructor}</Table.Cell>
+											<Table.Cell>
+												<Text truncate>{competitor.school}</Text>
+											</Table.Cell>
 
 											<Table.Cell>
-												<HStack gap="3">
+												<Text truncate>{competitor.instructor}</Text>
+											</Table.Cell>
+
+											<Table.Cell>
+												<HStack gap="3" overflow="hidden">
 													<Popover.Root lazyMount unmountOnExit>
 														<Popover.Trigger asChild>
 															<Button size="xs" variant="ghost">
@@ -366,30 +400,38 @@ export default function GeneralTable() {
 														</Portal>
 													</Popover.Root>
 
-													<Text>{competitor.name}</Text>
+													<Text truncate>{competitor.name}</Text>
 												</HStack>
 											</Table.Cell>
 
 											<Table.Cell>
-												<Badge
-													colorPalette={competitor.is_dan ? "red" : "green"}
-												>
-													{competitor.is_dan ? "DAN" : "COLOR"}
-												</Badge>
+												<Center>
+													<Badge
+														colorPalette={competitor.is_dan ? "red" : "green"}
+													>
+														{competitor.is_dan ? "DAN" : "COLOR"}
+													</Badge>
+												</Center>
 											</Table.Cell>
 
 											<Table.Cell>
-												{renderRadioGroup(competitor, "forms", isUpdating)}
+												<Center>
+													{renderRadioGroup(competitor, "forms", isUpdating)}
+												</Center>
 											</Table.Cell>
 
 											<Table.Cell>
-												{renderRadioGroup(competitor, "combat", isUpdating)}
+												<Center>
+													{renderRadioGroup(competitor, "combat", isUpdating)}
+												</Center>
 											</Table.Cell>
 
 											<Table.Cell>
-												{competitor.is_dan
-													? "-"
-													: renderRadioGroup(competitor, "jump", isUpdating)}
+												<Center>
+													{competitor.is_dan
+														? "-"
+														: renderRadioGroup(competitor, "jump", isUpdating)}
+												</Center>
 											</Table.Cell>
 
 											<Table.Cell>
@@ -407,7 +449,6 @@ export default function GeneralTable() {
 					</Table.Body>
 				</Table.Root>
 			</Box>
-
 			{!isLoading && filteredCompetitors.length > 0 && (
 				<HStack justify="space-between" wrap="wrap" gap="4">
 					<HStack>
@@ -470,7 +511,7 @@ export default function GeneralTable() {
 			)}
 
 			{!isLoading && filteredCompetitors.length === 0 && (
-				<Box borderWidth="1px" borderRadius="xl" p="8" textAlign="center">
+				<Box borderWidth="1px" p="8" textAlign="center">
 					<Text>No se encontraron competidores 👀</Text>
 				</Box>
 			)}

@@ -80,10 +80,10 @@ export default function CompetitorTable({ category }: CompetitorTableProps) {
 	return (
 		<Stack gap="4">
 			<Box borderWidth="1px" overflowX="auto">
-				<Table.Root size="sm" variant="outline" interactive>
+				<Table.Root size="sm" variant="outline" interactive tableLayout="fixed">
 					<Table.Header>
 						<Table.Row>
-							<Table.ColumnHeader>
+							<Table.ColumnHeader width="55%">
 								<Button
 									size="xs"
 									variant="ghost"
@@ -94,7 +94,7 @@ export default function CompetitorTable({ category }: CompetitorTableProps) {
 								</Button>
 							</Table.ColumnHeader>
 
-							<Table.ColumnHeader>
+							<Table.ColumnHeader width="25%">
 								<Button
 									size="xs"
 									variant="ghost"
@@ -105,15 +105,17 @@ export default function CompetitorTable({ category }: CompetitorTableProps) {
 								</Button>
 							</Table.ColumnHeader>
 
-							<Table.ColumnHeader textAlign="end">
-								<Button
-									size="xs"
-									variant="ghost"
-									onClick={() => handleSort("total")}
-								>
-									TOTAL
-									<Icon as={LuArrowUpDown} />
-								</Button>
+							<Table.ColumnHeader width="20%">
+								<Center>
+									<Button
+										size="xs"
+										variant="ghost"
+										onClick={() => handleSort("total")}
+									>
+										TOTAL
+										<Icon as={LuArrowUpDown} />
+									</Button>
+								</Center>
 							</Table.ColumnHeader>
 						</Table.Row>
 					</Table.Header>
@@ -125,22 +127,22 @@ export default function CompetitorTable({ category }: CompetitorTableProps) {
 								}).map((_, index) => (
 									<Table.Row key={index}>
 										<Table.Cell>
-											<Skeleton height="40px" />
+											<Skeleton height="20px" width="180px" />
 										</Table.Cell>
 
 										<Table.Cell>
-											<Skeleton height="40px" />
+											<Skeleton height="20px" width="90px" />
 										</Table.Cell>
 
 										<Table.Cell>
-											<Skeleton height="40px" />
+											<Skeleton height="20px" width="40px" mx="auto" />
 										</Table.Cell>
 									</Table.Row>
 								))
 							: sortedCompetitors.map((competitor) => (
 									<Table.Row key={`${competitor.name}-${competitor.school}`}>
 										<Table.Cell>
-											<HStack gap="3">
+											<HStack gap="3" overflow="hidden">
 												<Popover.Root lazyMount unmountOnExit>
 													<Popover.Trigger asChild>
 														<Button size="xs" variant="ghost">
@@ -161,7 +163,7 @@ export default function CompetitorTable({ category }: CompetitorTableProps) {
 													</Portal>
 												</Popover.Root>
 
-												<Text>{competitor.name}</Text>
+												<Text truncate>{competitor.name}</Text>
 											</HStack>
 										</Table.Cell>
 

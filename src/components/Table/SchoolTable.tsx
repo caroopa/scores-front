@@ -69,41 +69,50 @@ export default function SchoolTable() {
 	return (
 		<Stack gap="5">
 			<Box borderWidth="1px" overflowX="auto">
-				<Table.Root size="sm" variant="outline">
+				<Table.Root size="sm" variant="outline" tableLayout="fixed">
 					<Table.Header h="47px">
 						<Table.Row>
-							<Table.ColumnHeader>
+							<Table.ColumnHeader width="10%">
 								<Text textAlign="center">#</Text>
 							</Table.ColumnHeader>
 
-							<Table.ColumnHeader>
+							<Table.ColumnHeader width="50%">
 								<Text>Escuela</Text>
 							</Table.ColumnHeader>
 
-							<Table.ColumnHeader>
+							<Table.ColumnHeader width="15%">
 								<Text textAlign="center">Total</Text>
 							</Table.ColumnHeader>
 
-							<Table.ColumnHeader>
+							<Table.ColumnHeader width="25%">
 								<Center>
 									<FaPlusMinus />
 								</Center>
 							</Table.ColumnHeader>
 						</Table.Row>
 					</Table.Header>
+
 					<Table.Body>
 						{isLoading || isFetching
 							? Array.from({
 									length: skeletonRows,
 								}).map((_, i) => (
 									<Table.Row key={i}>
-										{Array.from({
-											length: 4,
-										}).map((__, j) => (
-											<Table.Cell key={j}>
-												<Skeleton height="40px" />
-											</Table.Cell>
-										))}
+										<Table.Cell>
+											<Skeleton height="20px" width="20px" mx="auto" />
+										</Table.Cell>
+
+										<Table.Cell>
+											<Skeleton height="20px" width="160px" />
+										</Table.Cell>
+
+										<Table.Cell>
+											<Skeleton height="20px" width="40px" mx="auto" />
+										</Table.Cell>
+
+										<Table.Cell>
+											<Skeleton height="32px" width="80px" mx="auto" />
+										</Table.Cell>
 									</Table.Row>
 								))
 							: schools.map((school, index) => {
@@ -118,13 +127,13 @@ export default function SchoolTable() {
 											</Table.Cell>
 
 											<Table.Cell>
-												<Text>{school.name}</Text>
+												<Text truncate>{school.name}</Text>
 											</Table.Cell>
 
 											<Table.Cell>
 												<Center>
 													{isUpdating ? (
-														<Skeleton height="40px" width="40px" />
+														<Skeleton height="20px" width="40px" />
 													) : (
 														<Text fontWeight="bold">{school.total}</Text>
 													)}

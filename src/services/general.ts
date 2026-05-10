@@ -1,14 +1,7 @@
 import axios from "axios";
 
-import type { General, TrophyCount } from "../types/domain";
-
+import type { General, ScorePayload } from "../types/domain";
 import { BASE_URL } from "../types/constant";
-
-export interface ScorePayload {
-	forms: number;
-	combat: number;
-	jump: number;
-}
 
 const API_URL = `${BASE_URL}general`;
 
@@ -35,10 +28,4 @@ export const calculateTotal = async (
 	score: ScorePayload,
 ): Promise<void> => {
 	await axios.put(`${API_URL}/calculate_total/${competitorId}`, score);
-};
-
-export const trophiesCounts = async (): Promise<TrophyCount[]> => {
-	const response = await axios.get(`${API_URL}/trophies_counts`);
-
-	return response.data;
 };
