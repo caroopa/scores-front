@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 import {
 	Badge,
@@ -6,6 +6,7 @@ import {
 	Button,
 	ButtonGroup,
 	Center,
+	CloseButton,
 	HStack,
 	Icon,
 	IconButton,
@@ -241,10 +242,32 @@ export default function GeneralTable() {
 		);
 	};
 
+	const inputRef = useRef<HTMLInputElement | null>(null);
+
 	return (
 		<VStack align="stretch" gap="5">
-			<InputGroup flex="1" startElement={<LuSearch />}>
+			<InputGroup
+				flex="1"
+				startElement={<LuSearch />}
+				p="0.5"
+				endElement={
+					search ? (
+						<CloseButton
+							size="xs"
+							me="-2"
+							variant="plain"
+							onClick={() => {
+								setSearch("");
+								setCurrentPage(1);
+
+								inputRef.current?.focus();
+							}}
+						/>
+					) : undefined
+				}
+			>
 				<Input
+					ref={inputRef}
 					placeholder="Buscar competidor..."
 					value={search}
 					onChange={(e) => {
