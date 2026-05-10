@@ -429,7 +429,7 @@ export default function GeneralTable() {
 											<Table.Cell>
 												<Center>
 													{competitor.is_dan
-														? "-"
+														? ""
 														: renderRadioGroup(competitor, "jump", isUpdating)}
 												</Center>
 											</Table.Cell>
